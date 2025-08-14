@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../../firebase/config.js';
-import { callGeminiAPI } from '../../api/gemini.js';
-import CustomButton from '../ui/Button.jsx';
-import Spinner from '../ui/Spinner.jsx';
-import MessageBox from '../ui/MessageBox.jsx';
+import { db } from '@/firebase/config.js';
+import { callGeminiAPI } from '@/api/gemini.js';
+import CustomButton from '@/components/ui/Button.jsx';
+import Spinner from '@/components/ui/Spinner.jsx';
+import MessageBox from '@/components/ui/MessageBox.jsx';
 import { BrainCircuit, Sparkles, Save, Wand2 } from 'lucide-react';
 
 const appId = 'default-songwriting-app';
@@ -22,13 +22,21 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
         setIsLoadingIdeas(true);
         const prompt = "Erstelle 5 kreative und unterschiedliche Song-Ideen für einen modernen deutschen Pop- oder Rap-Song. Jede Idee sollte nur ein kurzer Satz sein. Gib nur die 5 Sätze zurück, getrennt durch einen Zeilenumbruch, ohne Nummerierung oder zusätzliche Erklärungen.";
         const response = await callGeminiAPI(prompt);
-        const ideas = response.split('\n').filter(line => line.trim() !== '');
-        if (ideas.length > 0) {
-            setIdea(ideas[0]);
+        
+        // KORREKTUR: Prüft, ob die Antwort ein gültiger String ist, bevor .split() aufgerufen wird.
+        if (typeof response === 'string' && !response.startsWith('Fehler:')) {
+            const ideas = response.split('\n').filter(line => line.trim() !== '');
+            if (ideas.length > 0) {
+                setIdea(ideas[0]);
+            }
+        } else {
+            // Zeigt die Fehlermeldung von der API in der UI an.
+            setMessage({ type: 'error', text: response });
         }
         setIsLoadingIdeas(false);
     };
 
+    // ... Der Rest der Komponente bleibt unverändert ...
     const handleGenerateSong = async () => {
         if (!idea) {
             setMessage({ type: 'error', text: 'Bitte gib eine Song-Idee ein.' });
