@@ -56,28 +56,28 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
 
             **DEIN KREATIVES REGELWERK:**
 
-            **1. Tonalität & Vibe (Der Sound):**
+            **1. Thematische Umschreibung (Wichtigste Regel):**
+            - Das Kernthema der Song-Idee darf im Text **niemals direkt genannt** werden. Es muss ausschließlich durch Bilder, Handlungen und Gefühle umschrieben werden. Wenn die Idee "Sommernacht" ist, beschreibe die Szene (warmer Wind, Grillenzirpen, der Geruch von Petrichor), aber verwende niemals das Wort "Sommernacht".
+
+            **2. Tonalität & Vibe (Der Sound):**
             - **Grundstimmung:** Erzeuge eine cineastische Atmosphäre. Denk an einen Film: die Spannung zwischen dem Gesagten und Ungesagten. Die Stimmung ist entscheidend.
-            - **Sprache:** Schreibe in einer klaren, direkten und modernen Umgangssprache. Der Text muss sich anfühlen wie ein echter Gedanke oder ein belauschtes Gespräch. Authentischer Slang (z.B. "viben", "lost") ist erlaubt, aber nicht erzwungen.
-            - **Englische Anglizismen:** Verwende sie wenn du keine passende deutsche Reime findest, aber achte darauf, dass sie den Text nicht überladen. Sie sollten natürlich und flüssig in den deutschen Text integriert sein.
+            - **Sprache:** Schreibe in einer klaren, direkten und modernen Umgangssprache. Der Text muss sich anfühlen wie ein echter Gedanke oder ein belauschtes Gespräch.
 
-            **2. Storytelling & Emotion (Das Herz):**
-            - **Geschichte > Poesie:** Eine klare, nachvollziehbare Geschichte oder Situation steht im Mittelpunkt. Vermeide zu abstrakte oder rein poetische Formulierungen.
-            - **Dynamische Szenen & Entwicklung:** Die Geschichte darf nicht statisch in einer einzigen Szene verharren. Sie muss sich durch verschiedene Momente, Orte oder emotionale Zustände bewegen. Die Perspektive des Protagonisten muss sich im Laufe des Songs entwickeln oder verändern.
-            - **Der Twist:** Baue ein überraschendes Element oder einen unerwarteten Perspektivwechsel ein, idealerweise in der Bridge oder im letzten Verse.
-            - **Konkretes "Show, Don't Tell":** Zeige Emotionen durch präzise, alltägliche Beobachtungen und Handlungen. Statt "ich bin einsam", schreibe "der fünfte Anruf bei deiner Mailbox heute".
-            - **Thematische Bildsprache:** Alle Metaphern, Vergleiche und sensorischen Details müssen die Grundstimmung der Song-Idee widerspiegeln.
+            **3. Storytelling & Emotion (Das Herz):**
+            - **Geschichte > Poesie:** Eine klare, nachvollziehbare Geschichte oder Situation steht im Mittelpunkt.
+            - **Dynamische Szenen & Entwicklung:** Die Geschichte darf nicht statisch sein. Sie muss sich durch verschiedene Momente oder emotionale Zustände bewegen. Die Perspektive des Protagonisten muss sich im Laufe des Songs entwickeln.
+            - **Der Twist:** Baue ein überraschendes Element oder einen unerwarteten Perspektivwechsel ein, idealerweise in der Bridge.
+            - **Konkretes "Show, Don't Tell":** Zeige Emotionen durch präzise, alltägliche Beobachtungen und Handlungen.
 
-            **3. Lyrische Technik & Originalität:**
-            - **Kraftvolle Umschreibungen statt Klischees:** Vermeide abgedroschene, klischeehafte Darstellungen wie "Die Luft ist schwer". Formuliere stattdessen ungewöhnliche, kraftvolle oder romantisierende Umschreibungen, die die Atmosphäre auf eine frische Weise transportieren. Beispiel: Statt "Die Luft ist schwer" schreibe "Der Sauerstoff hat heute Kündigungsfrist" oder "Jeder Atemzug schmeckt nach Blei und altem Parfüm".
-            - **Sinnvolle Bildsprache:** Metaphern müssen kreativ, aber logisch nachvollziehbar sein. Kein "die Stadt atmet Licht".
-            - **Wort-Tabus:** Vermeide klischeehafte Bilder und die Worte: Schatten, Echo, Kälte, Glanz, zerbricht, rast, kalt. Finde originelle Umschreibungen.
-            - **Dynamische Wortwahl:** Achte aktiv auf Wortwiederholungen. Ersetze generische Wörter durch stärkere Synonyme, um einen reichen und nicht-roboterhaften Wortschatz zu gewährleisten.
-            - **Die Texte sollen so geschrieben werden das Zuhörer sich selbst wieder in der Person, Situation oder Emotion erkennen können.
+            **4. Lyrische Technik & Originalität:**
+            - **Intelligente & Effiziente Bildsprache:** Nutze eine anspruchsvolle, intelligente Wortwahl (z.B. "Petrichor" statt "Regengeruch"). Male detailreiche Bilder durch den gezielten Einsatz von starken Verben und prägnanten Adjektiven, ohne die Zeilen unnötig lang werden zu lassen. Vermittle Bilder effektiv und auf den Punkt.
+            - **Kraftvolle Umschreibungen statt Klischees:** Vermeide abgedroschene Darstellungen wie "Die Luft ist schwer". Formuliere stattdessen ungewöhnliche, kraftvolle Umschreibungen (z.B. "Jeder Atemzug schmeckt nach Blei und altem Parfüm").
+            - **Wort-Tabus:** Vermeide klischeehafte Bilder und die Worte: Schatten, Echo, Kälte, Glanz, zerbricht, rast, kalt, Asphalt. Finde originelle Umschreibungen.
+            - **Dynamische Wortwahl:** Achte aktiv auf Wortwiederholungen. Ersetze generische Wörter durch stärkere Synonyme.
 
-            **4. Flow & Musikalität (Struktur von Strophe und Refrain):**
-            - **Verse (Strophen):** Die Strophen sollen einen entspannten, melodischen und fast gesungenen Rap-Stil haben. Der Flow ist Vibe-orientiert, oft introspektiv und emotional. Nutze hierfür einen lockeren, gesprächsartigen Rhythmus mit mehrsilbigen Reimen und Assonanzen.
-            - **Hook (Refrain):** Der Refrain muss im starken Kontrast zur Strophe stehen. Er muss extrem eingängig (catchy), melodisch und sofort singbar sein, wie in einem reinen Popsong. Hier sind einfache, klare Reime (AABB, ABAB) und eine prägnante, emotionale Kernaussage perfekt.
+            **5. Flow & Musikalität (Struktur von Strophe und Refrain):**
+            - **Verse (Strophen) - Anspruchsvolle Reimketten:** Baue in den Strophen gezielt anspruchsvolle, mehrsilbige Reimketten ein, die sich über mehrere Zeilen erstrecken. Der Flow wird durch die Kombination von Wörtern und Wortzusammensetzungen erzeugt, die in ihrer Vokalabfolge und Silbenanzahl übereinstimmen. **WICHTIG:** Die folgenden Beispiele dienen nur zur Veranschaulichung der Technik, ihr Inhalt darf unter keinen Umständen im generierten Text verwendet werden. Beispiele für diese Technik sind Reimketten wie ('unglaublich teuer' / 'Maus im Feuer' / 'Raubfischmäulern') oder ('Schnapsladen rennt' / 'Haftstrafe denkt' / 'Knastnarben kennst'). Konzentriere dich darauf, diese Reim-Technik auf das gegebene Song-Thema mit originellem Inhalt anzuwenden. Die Reimketten müssen inhaltlich ein stimmiges Bild ergeben und dürfen nicht erzwungen wirken.
+            - **Hook (Refrain) - Eingängige Melodik:** Der Refrain muss im starken Kontrast zur Strophe stehen. Er muss extrem eingängig (catchy), melodisch und sofort singbar sein, wie in einem reinen Popsong. Hier sind einfache, klare Reime (AABB, ABAB) und eine prägnante, emotionale Kernaussage perfekt.
             - **Rhythmusgefühl:** Variiere die Satzlänge stark, um Dynamik und Spannung zu erzeugen.
 
             **STILISTISCHE REFERENZTEXTE (ALS INSPIRATION NUTZEN, NICHT KOPIEREN):**
