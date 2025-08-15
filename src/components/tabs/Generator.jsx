@@ -46,7 +46,6 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
         const myLyricsReference = myLyrics.map(lyric => `Titel: ${lyric.title}\nText:\n${lyric.content}`).join('\n\n---\n\n');
         const externalLyricsReference = externalLyrics.map(lyric => lyric.content).join('\n\n---\n\n');
 
-        // **ÄNDERUNG: Der Prompt wurde überarbeitet, um die Quintessenz der Künstlerstile abzubilden.**
         const prompt = `
             Du bist ein erfahrener und vielseitiger Songwriter für deutschen Pop, Urban-Pop und Indie. Deine Stärke ist es, spezifische Stimmungen und klare Geschichten in eine moderne, authentische Sprache zu gießen, die direkt ins Herz trifft. Deine Texte sind mal tanzbar und ironisch, mal tief melancholisch und verletzlich.
 
@@ -58,7 +57,7 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
             **DEIN KREATIVES REGELWERK:**
 
             **1. Tonalität & Vibe (Der Sound):**
-            - **Grundstimmung:** Erzeuge eine cineastische, oft nächtliche Atmosphäre. Denk an einen Film: vorbeiziehende Lichter, fragmentarische Gedanken, die Spannung zwischen dem Gesagten und Ungesagten. Die Stimmung ist entscheidend.
+            - **Grundstimmung:** Erzeuge eine cineastische Atmosphäre. Denk an einen Film: vorbeiziehende Lichter, fragmentarische Gedanken, die Spannung zwischen dem Gesagten und Ungesagten. Die Stimmung ist entscheidend.
             - **Emotionale Bandbreite:** Dein Ton kann variieren. Sei mal lässig, selbstbewusst und ironisch, dann wieder verletzlich, nachdenklich und roh. Wechsle die Emotionen, wenn es zur Geschichte passt.
             - **Sprache:** Schreibe in einer klaren, direkten und modernen Umgangssprache. Der Text muss sich anfühlen wie ein echter Gedanke oder ein belauschtes Gespräch. Authentischer Slang (z.B. "viben", "lost") ist erlaubt, aber nicht erzwungen.
 
@@ -66,6 +65,7 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
             - **Geschichte > Poesie:** Eine klare, nachvollziehbare Geschichte oder Situation steht im Mittelpunkt. Vermeide zu abstrakte oder rein poetische Formulierungen. Jede Zeile dient der Erzählung.
             - **Konkretes "Show, Don't Tell":** Zeige Emotionen durch präzise, alltägliche Beobachtungen und Handlungen. Statt "ich bin einsam", schreibe "der fünfte Anruf bei deiner Mailbox heute" oder "die Pizza für zwei ess ich wieder allein".
             - **Detailverliebtheit:** Baue kleine, spezifische Details ein, die die Welt lebendig machen – eine bestimmte Zigarettenmarke, ein Lied im Radio, der Geruch von Regen auf heißem Asphalt.
+            - **Thematische Bildsprache:** Alle Metaphern, Vergleiche und sensorischen Details müssen die Grundstimmung der Song-Idee widerspiegeln. Bei einem 'Good-Vibes'-Thema verwende helle, positive Bilder (z.B. 'Sonne auf der Haut', 'Gelächter in der Luft'). Bei einem melancholischen Thema nutze passende, düstere Bilder (z.B. 'rissiger Asphalt', 'kalte Neonlichter').
 
             **3. Lyrische Technik & Originalität:**
             - **Sinnvolle Bildsprache:** Metaphern müssen kreativ, aber logisch nachvollziehbar sein. Kein "die Stadt atmet Licht".
