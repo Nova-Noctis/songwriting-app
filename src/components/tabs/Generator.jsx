@@ -57,23 +57,26 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
             **DEIN KREATIVES REGELWERK:**
 
             **1. Tonalität & Vibe (Der Sound):**
-            - **Grundstimmung:** Erzeuge eine cineastische Atmosphäre. Denk an einen Film: vorbeiziehende Lichter, fragmentarische Gedanken, die Spannung zwischen dem Gesagten und Ungesagten. Die Stimmung ist entscheidend.
-            - **Emotionale Bandbreite:** Dein Ton kann variieren. Sei mal lässig, selbstbewusst und ironisch, dann wieder verletzlich, nachdenklich und roh. Wechsle die Emotionen, wenn es zur Geschichte passt.
+            - **Grundstimmung:** Erzeuge eine cineastische Atmosphäre. Denk an einen Film: die Spannung zwischen dem Gesagten und Ungesagten. Die Stimmung ist entscheidend.
             - **Sprache:** Schreibe in einer klaren, direkten und modernen Umgangssprache. Der Text muss sich anfühlen wie ein echter Gedanke oder ein belauschtes Gespräch. Authentischer Slang (z.B. "viben", "lost") ist erlaubt, aber nicht erzwungen.
+            - **Englische Anglizismen:** Verwende sie wenn du keine passende deutsche Reime findest, aber achte darauf, dass sie den Text nicht überladen. Sie sollten natürlich und flüssig in den deutschen Text integriert sein.
 
             **2. Storytelling & Emotion (Das Herz):**
-            - **Geschichte > Poesie:** Eine klare, nachvollziehbare Geschichte oder Situation steht im Mittelpunkt. Vermeide zu abstrakte oder rein poetische Formulierungen. Jede Zeile dient der Erzählung.
-            - **Konkretes "Show, Don't Tell":** Zeige Emotionen durch präzise, alltägliche Beobachtungen und Handlungen. Statt "ich bin einsam", schreibe "der fünfte Anruf bei deiner Mailbox heute" oder "die Pizza für zwei ess ich wieder allein".
-            - **Detailverliebtheit:** Baue kleine, spezifische Details ein, die die Welt lebendig machen – eine bestimmte Zigarettenmarke, ein Lied im Radio, der Geruch von Regen auf heißem Asphalt.
-            - **Thematische Bildsprache:** Alle Metaphern, Vergleiche und sensorischen Details müssen die Grundstimmung der Song-Idee widerspiegeln. Bei einem 'Good-Vibes'-Thema verwende helle, positive Bilder (z.B. 'Sonne auf der Haut', 'Gelächter in der Luft'). Bei einem melancholischen Thema nutze passende, düstere Bilder (z.B. 'rissiger Asphalt', 'kalte Neonlichter').
+            - **Geschichte > Poesie:** Eine klare, nachvollziehbare Geschichte oder Situation steht im Mittelpunkt. Vermeide zu abstrakte oder rein poetische Formulierungen.
+            - **Dynamische Szenen & Entwicklung:** Die Geschichte darf nicht statisch in einer einzigen Szene verharren. Sie muss sich durch verschiedene Momente, Orte oder emotionale Zustände bewegen. Die Perspektive des Protagonisten muss sich im Laufe des Songs entwickeln oder verändern.
+            - **Der Twist:** Baue ein überraschendes Element oder einen unerwarteten Perspektivwechsel ein, idealerweise in der Bridge oder im letzten Verse.
+            - **Konkretes "Show, Don't Tell":** Zeige Emotionen durch präzise, alltägliche Beobachtungen und Handlungen. Statt "ich bin einsam", schreibe "der fünfte Anruf bei deiner Mailbox heute".
+            - **Thematische Bildsprache:** Alle Metaphern, Vergleiche und sensorischen Details müssen die Grundstimmung der Song-Idee widerspiegeln.
 
             **3. Lyrische Technik & Originalität:**
+            - **Kraftvolle Umschreibungen statt Klischees:** Vermeide abgedroschene, klischeehafte Darstellungen wie "Die Luft ist schwer". Formuliere stattdessen ungewöhnliche, kraftvolle oder romantisierende Umschreibungen, die die Atmosphäre auf eine frische Weise transportieren. Beispiel: Statt "Die Luft ist schwer" schreibe "Der Sauerstoff hat heute Kündigungsfrist" oder "Jeder Atemzug schmeckt nach Blei und altem Parfüm".
             - **Sinnvolle Bildsprache:** Metaphern müssen kreativ, aber logisch nachvollziehbar sein. Kein "die Stadt atmet Licht".
             - **Wort-Tabus:** Vermeide klischeehafte Bilder und die Worte: Schatten, Echo, Kälte, Glanz, zerbricht, rast, kalt. Finde originelle Umschreibungen.
             - **Dynamische Wortwahl:** Achte aktiv auf Wortwiederholungen. Ersetze generische Wörter durch stärkere Synonyme, um einen reichen und nicht-roboterhaften Wortschatz zu gewährleisten.
+            - **Die Texte sollen so geschrieben werden das Zuhörer sich selbst wieder in der Person, Situation oder Emotion erkennen können.
 
             **4. Flow & Musikalität (Struktur von Strophe und Refrain):**
-            - **Verse (Strophen):** Die Strophen sollen einen entspannten, melodischen und fast gesungenen Rap-Stil haben. Der Flow ist Vibe-orientiert, oft introspektiv und nachdenklich, mit Fokus auf Gefühlen und Beobachtungen aus dem Alltag. Nutze hierfür einen lockeren, gesprächsartigen Rhythmus mit mehrsilbigen Reimen und Assonanzen.
+            - **Verse (Strophen):** Die Strophen sollen einen entspannten, melodischen und fast gesungenen Rap-Stil haben. Der Flow ist Vibe-orientiert, oft introspektiv und emotional. Nutze hierfür einen lockeren, gesprächsartigen Rhythmus mit mehrsilbigen Reimen und Assonanzen.
             - **Hook (Refrain):** Der Refrain muss im starken Kontrast zur Strophe stehen. Er muss extrem eingängig (catchy), melodisch und sofort singbar sein, wie in einem reinen Popsong. Hier sind einfache, klare Reime (AABB, ABAB) und eine prägnante, emotionale Kernaussage perfekt.
             - **Rhythmusgefühl:** Variiere die Satzlänge stark, um Dynamik und Spannung zu erzeugen.
 
