@@ -45,25 +45,100 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
     const genres = [ 'Freie Wahl', 'Urban-Pop / Rap', 'Indie-Folk', 'Rock / Punk', '80er Synth-Pop', 'East Coast Hip-Hop', 'West Coast Hip-Hop', 'Trap', 'Gangsta-Rap', 'Conscious Hip-Hop', 'Lo-Fi Hip-Hop', 'Drill', 'Grime', 'Dance-Pop', 'Synth-Pop', 'Indie-Pop', 'Pop-Rock', 'Power-Pop', 'J-Pop (Japanischer Pop)', 'K-Pop (Koreanischer Pop)', 'Schlager', 'Contemporary R&B', 'Neo-Soul', 'Funk', 'Soul', 'Motown', 'EDM', 'Techno' ];
     const perspectives = [ 'Keine', 'Ich-Perspektive', 'Du-Perspektive', 'Er/Sie/Es-Perspektive (Dritte-Person-Perspektive)', 'Wir-Perspektive', 'Ihr-Perspektive', 'Auktoriale (allwissende) Perspektive', 'Neutrale (beobachtende) Perspektive', 'Wechselnde Perspektiven' ];
 
-    const generateRandomIdeas = async () => {
-        // ... Logik bleibt unverändert
-    };
+    const generateRandomIdeas = useCallback(async () => {
+        setIsLoadingIdeas(true);
+        setGeneratedIdeas([]);
+        const prompt = "Erstelle 5 äußerst kreative und thematisch vielfältige Song-Ideen für einen modernen deutschen Pop- oder Rap-Song. Decke eine breite Palette an Themen ab, wie zum Beispiel Natur (ein Sturm zieht auf), Gesellschaftskritik (die Stille in einer lauten Stadt), Science-Fiction (der letzte Mensch auf der Erde findet eine alte Schallplatte) oder historische Ereignisse (ein Brief aus dem Krieg). Vermeide alltägliche, persönliche Beziehungsthemen oder Ideen, die sich nur um Social Media und das digitale Leben drehen. Jede Idee sollte nur ein kurzer, inspirierender Satz sein. Gib nur die 5 Sätze zurück, getrennt durch einen Zeilenumbruch, ohne Nummerierung oder zusätzliche Erklärungen.";
+        const response = await callGeminiAPI(prompt);
+        if (typeof response === 'string' && !response.startsWith('Fehler:')) {
+            const ideas = response.split('\n').filter(line => line.trim() !== '');
+            setGeneratedIdeas(ideas);
+        } else {
+            setMessage({ type: 'error', text: response });
+        }
+        setIsLoadingIdeas(false);
+    }, []);
 
-    const handleInspireMe = async () => {
-        // ... Logik bleibt unverändert
-    };
+    const handleInspireMe = useCallback(async () => {
+        setIsLoadingInspire(true);
+        setMessage(null);
+        setGeneratedSong(null);
+        setGeneratedIdeas([]);
+        const randomGenre = genres[Math.floor(Math.random() * genres.length)];
+        const randomPerspective = perspectives[Math.floor(Math.random() * perspectives.length)];
+        setGenre(randomGenre);
+        setPerspective(randomPerspective);
+        const ideaPrompt = `Gib mir eine einzige, äußerst kreative und unerwartete Song-Idee für das Genre '${randomGenre}'. Die Idee sollte nur ein kurzer, inspirierender Satz sein.`;
+        const randomIdea = await callGeminiAPI(ideaPrompt);
+        if (typeof randomIdea === 'string' && !randomIdea.startsWith('Fehler:')) {
+            setIdea(randomIdea.trim());
+        } else {
+            setIdea("Ein unerwarteter Moment der Stille");
+            setMessage({ type: 'error', text: randomIdea });
+        }
+        setInstructions('');
+        setNegativePrompt('');
+        setIsLoadingInspire(false);
+    }, []);
 
-    const handleGenerateSong = async () => {
-        // ... Logik bleibt unverändert
-    };
+    const handleGenerateSong = useCallback(async () => {
+        if (!idea) {
+            setMessage({ type: 'error', text: 'Bitte gib eine Song-Idee ein.' });
+            return;
+        }
+        setIsLoading(true);
+        setMessage(null);
+        setGeneratedSong(null);
+        const myLyricsReference = myLyrics.map(lyric => `Titel: ${lyric.title}\nText:\n${lyric.content}`).join('\n\n---\n\n');
+        const externalLyricsReference = externalLyrics.map(lyric => lyric.content).join('\n\n---\n\n');
+        const genreInstructions = { 'Freie Wahl': "Du bist ein vielseitiger Songwriter. Wähle einen passenden Stil für die gegebene Song-Idee und gib dein Bestes, einen herausragenden Text zu schreiben.", 'Urban-Pop / Rap': "Du bist ein erfahrener Songwriter für deutschen Pop und Urban-Pop. Deine Stärke ist es, klare Geschichten und Emotionen in eine moderne, authentische Sprache zu gießen.", 'Indie-Folk': "Du bist ein Singer-Songwriter im Stil des deutschen Indie-Folk. Dein Fokus liegt auf ehrlicher, einfacher Sprache, akustischen Stimmungen und Natur-Metaphern.", 'Rock / Punk': "Du bist ein Texter für eine deutsche Rock/Punk-Band. Deine Sprache ist energiegeladen, direkt und roh. Behandle gesellschaftskritische Themen oder persönliche Wut.", '80er Synth-Pop': "Du schreibst Texte im Stil des 80er-Jahre Synth-Pop. Erzeuge eine cineastische Nacht-Atmosphäre mit Themen wie Sehnsucht und Eskapismus.", 'East Coast Hip-Hop': "Dein Stil ist der des East Coast Hip-Hop: lyrisch dicht, komplex gereimt, oft mit Fokus auf Storytelling und sozialkritischen Beobachtungen.", 'West Coast Hip-Hop': "Schreibe im G-Funk-Stil des West Coast Hip-Hop: entspannter, funkiger Vibe, oft mit Geschichten über das Leben auf der Straße, Parties und Autos.", 'Trap': "Dein Text ist im Trap-Stil: rhythmisch, oft mit Triolen-Flows, Ad-Libs und Fokus auf Themen wie Geld, Drogen und dem Aufstieg aus ärmlichen Verhältnissen.", 'Gangsta-Rap': "Du schreibst einen rohen, ungefilterten Gangsta-Rap-Text. Die Sprache ist hart, die Themen sind Gewalt, Kriminalität und das Überleben im Ghetto.", 'Conscious Hip-Hop': "Dein Text ist Conscious Hip-Hop: politisch, sozialkritisch und introspektiv. Du regst zum Nachdenken an und thematisierst Ungerechtigkeit.", 'Lo-Fi Hip-Hop': "Schreibe einen entspannten, melancholischen Lo-Fi Hip-Hop Text. Der Vibe ist nostalgisch, die Sprache einfach und die Stimmung nachdenklich und beruhigend.", 'Drill': "Dein Stil ist Drill: düstere, bedrohliche Atmosphäre, oft mit expliziten Texten über Gewalt und das Straßenleben. Der Flow ist rhythmisch und aggressiv.", 'Grime': "Du schreibst einen Grime-Text: schneller, energiegeladener Flow über schnelle, elektronische Beats. Die Sprache ist direkt und oft konfrontativ.", 'Dance-Pop': "Dein Ziel ist ein Dance-Pop-Hit: extrem eingängig, tanzbar, mit einem einfachen, positiven Text über Liebe, Feiern oder Freiheit.", 'Synth-Pop': "Schreibe einen Synth-Pop-Text: melodiös, oft melancholisch, mit elektronischen Klängen und Themen wie Technologie, Entfremdung oder futuristischer Romantik.", 'Indie-Pop': "Dein Stil ist Indie-Pop: charmant, oft etwas quirky, mit cleveren Texten über persönliche Erfahrungen und Beobachtungen.", 'Pop-Rock': "Schreibe einen Pop-Rock-Text: eingängige Melodien treffen auf Gitarrenriffs. Die Themen sind oft hymnisch und behandeln große Gefühle wie Liebe oder Herzschmerz.", 'Power-Pop': "Dein Text ist Power-Pop: kurze, energiegeladene Songs mit lauten Gitarren und extrem eingängigen Melodien.", 'J-Pop (Japanischer Pop)': "Schreibe einen Text im Stil des J-Pop: oft sehr melodisch, energetisch und positiv, mit Themen, die von Liebe bis zu fantasievollen Geschichten reichen.", 'K-Pop (Koreanischer Pop)': "Dein Text ist für eine K-Pop-Gruppe: eine Mischung aus Gesang und Rap, oft mit englischen Phrasen. Die Themen sind Liebe, Selbstbewusstsein und Empowerment.", 'Schlager': "Schreibe einen modernen Schlagertext: einfache, positive Sprache, klare Reime und Themen wie Liebe, Sehnsucht und heile Welt.", 'Contemporary R&B': "Dein Stil ist Contemporary R&B: geschmeidig, sinnlich, mit Fokus auf modernen Liebes- und Beziehungsthemen. Der Gesang ist melodiös und oft emotional.", 'Neo-Soul': "Schreibe einen Neo-Soul-Text: tiefgründig, poetisch, mit Einflüssen aus Jazz und Funk. Die Themen sind oft philosophisch oder sozialkritisch.", 'Funk': "Dein Text ist Funk: rhythmisch, tanzbar und voller Energie. Der Fokus liegt auf dem Groove und oft auf positiven, lebensbejahenden Botschaften.", 'Soul': "Schreibe einen klassischen Soul-Text: voller Gefühl und Leidenschaft, oft über Herzschmerz, Liebe und soziale Themen.", 'Motown': "Dein Stil ist Motown: eingängiger Pop mit Soul-Einflüssen. Die Texte sind oft optimistisch und erzählen einfache Liebesgeschichten.", 'EDM': "Schreibe einen EDM-Text: einfache, hymnische und repetitive Vocals, die sich perfekt für große Festivals eignen. Das Thema ist meist Euphorie, Einheit oder Feiern.", 'Techno': "Dein Text für einen Techno-Track ist minimalistisch, oft nur einzelne Worte oder kurze Phrasen, die hypnotisch wiederholt werden und die düstere, treibende Atmosphäre unterstützen." };
+        const selectedGenreInstruction = genreInstructions[genre] || genreInstructions['Freie Wahl'];
+        const prompt = `${selectedGenreInstruction}\n\n**BENUTZEREINGABEN:**\n- **Song-Idee:** ${idea}\n- **Perspektive:** ${perspective === 'Keine' ? 'Wähle die passendste.' : perspective}\n- **Zusätzliche Anweisungen:** ${instructions || "Keine besonderen."}\n- **Inhalte, die vermieden werden sollen:** ${negativePrompt || "Keine besonderen."}\n\n**DEIN KREATIVES REGELWERK:**\n ... \n\n**AUSGABEFORMAT (EXAKT EINZUHALTEN):**\nGib deine Antwort in drei klar getrennten Abschnitten zurück: ### Storyline, ### Arrangement, ### Songtext. Der Songtext muss Abschnitte wie [Strophe 1], [Refrain], [Bridge] etc. enthalten.`;
+        const response = await callGeminiAPI(prompt);
+        const storylineMatch = response.match(/### Storyline\s*([\s\S]*?)\s*### Arrangement/);
+        const arrangementMatch = response.match(/### Arrangement\s*([\s\S]*?)\s*### Songtext/);
+        const songtextMatch = response.match(/### Songtext\s*([\s\S]*)/);
+        if (storylineMatch && arrangementMatch && songtextMatch) {
+            setGeneratedSong({ storyline: storylineMatch[1].trim(), arrangement: arrangementMatch[1].trim(), songtext: songtextMatch[1].trim() });
+        } else {
+            setGeneratedSong({ songtext: response });
+            setMessage({ type: 'info', text: 'Die KI-Antwort konnte nicht vollständig strukturiert werden, hier ist das Ergebnis.' });
+        }
+        setIsLoading(false);
+    }, [idea, perspective, genre, negativePrompt, instructions, myLyrics, externalLyrics]);
 
-    const handleRegeneratePart = async (partToRegen) => {
-        // ... Logik bleibt unverändert
-    };
+    const handleRegeneratePart = useCallback(async (partToRegen) => {
+        setIsRegenerating(true);
+        setRegeneratingPart(partToRegen);
+        const prompt = `Aufgabe: Überarbeite einen bestimmten Teil eines vorhandenen Songtextes.\n\n**Vorhandener Songtext als Kontext:**\n${generatedSong.songtext}\n\n**Anweisung:**\nSchreibe NUR den Abschnitt "${partToRegen}" neu. Der neue Text für "${partToRegen}" muss stilistisch, thematisch und inhaltlich perfekt zum Rest des Songs passen. Behalte die ursprüngliche Stimmung bei, aber versuche, die Wortwahl und die Bilder zu variieren und zu verbessern. Gib NUR den neu geschriebenen, vollständigen Abschnitt inklusive der Kennzeichnung (z.B. "[Refrain]") zurück, sonst nichts.`;
+        const newPartText = await callGeminiAPI(prompt);
+        const regex = new RegExp(`(\\[${partToRegen.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\][\\s\\S]*?)(?=\\[|$)`, 'i');
+        const updatedSongtext = generatedSong.songtext.replace(regex, newPartText.trim() + '\n\n');
+        setGeneratedSong(prev => ({ ...prev, songtext: updatedSongtext.trim() }));
+        setIsRegenerating(false);
+        setRegeneratingPart(null);
+    }, [generatedSong]);
     
-    const saveSong = async () => {
-        // ... Logik bleibt unverändert
-    };
+    const saveSong = useCallback(async () => {
+        if (!generatedSong || !userId) return;
+        try {
+            const lyricsCollection = collection(db, 'artifacts', appId, 'users', userId, 'lyrics');
+            await addDoc(lyricsCollection, { title: idea, content: generatedSong.songtext, createdAt: new Date() });
+            setMessage({ type: 'success', text: 'Song erfolgreich gespeichert! Du wirst weitergeleitet...' });
+            setTimeout(() => {
+                setIdea('');
+                setPerspective('Keine');
+                setInstructions('');
+                setGeneratedSong(null);
+                setMessage(null);
+                setGeneratedIdeas([]);
+                setActiveTab('Eigene Texte');
+            }, 1500);
+        } catch (error) {
+            console.error("Fehler beim Speichern des Songs:", error);
+            setMessage({ type: 'error', text: 'Fehler beim Speichern des Songs.' });
+        }
+    }, [generatedSong, userId, idea, setActiveTab]);
 
     return (
         <div className="space-y-8">
@@ -124,7 +199,7 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
                     <textarea id="instructions" value={instructions} onChange={(e) => setInstructions(e.target.value)} placeholder="Der Refrain soll sich wiederholen..." className="w-full p-3 bg-black/30 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-gray-300 transition-all" rows="2"></textarea>
                 </div>
                 
-                <button className="w-full flex items-center justify-center px-4 py-3 bg-gray-200 text-black font-bold text-lg rounded-lg border border-white/20 hover:bg-white glow-effect transition-all duration-300">
+                <button onClick={handleGenerateSong} className="w-full flex items-center justify-center px-4 py-3 bg-gray-200 text-black font-bold text-lg rounded-lg border border-white/20 hover:bg-white glow-effect transition-all duration-300">
                     <Sparkles className="mr-3 h-6 w-6"/>
                     GENERIEREN
                 </button>

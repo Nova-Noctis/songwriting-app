@@ -55,7 +55,7 @@ export default function App() {
     const tabs = {
         Generator: <Generator userId={userId} myLyrics={myLyrics} externalLyrics={externalLyrics} setActiveTab={setActiveTab} />,
         'Eigene Texte': <MyLyrics userId={userId} />,
-        'Externe Texte': <ExternalLyrics externalLyrics={externalLyrics} />,
+        'Externe Texte': <ExternalLyrics />,
     };
 
     const TabButton = ({ name }) => (

@@ -1,13 +1,11 @@
 import React from 'react';
 import { BookOpen, Mic2, Search, Wand2, Lightbulb } from 'lucide-react';
 import Accordion from '@/components/ui/Accordion.jsx';
-// Platzhalter für die tatsächlichen Komponenten
-const LyricsList = () => <div className="font-inter text-gray-400">Hier wird die Liste deiner Texte angezeigt.</div>;
-const LineCollection = () => <div className="font-inter text-gray-400">Hier wird deine Zeilensammlung angezeigt.</div>;
-const RhymeFinder = () => <div className="font-inter text-gray-400">Hier kommt die Reimsuchmaschine hin.</div>;
-const SynonymFinder = () => <div className="font-inter text-gray-400">Hier kommt die Synonymsuche hin.</div>;
-const CreativeTool = ({title}) => <div className="font-inter text-gray-400">{title}</div>;
-
+import LyricsList from './LyricsList.jsx';
+import LineCollection from './LineCollection.jsx';
+import RhymeFinder from '@/components/tools/RhymeFinder.jsx';
+import SynonymFinder from '@/components/tools/SynonymFinder.jsx';
+import CreativeTool from '@/components/tools/CreativeTool.jsx';
 
 const MyLyrics = ({ userId }) => {
     return (
@@ -17,11 +15,11 @@ const MyLyrics = ({ userId }) => {
             </h2>
             
             <Accordion title="Deine eigenen Texte" icon={Mic2}>
-                <LyricsList />
+                <LyricsList userId={userId} />
             </Accordion>
 
             <Accordion title="Line Sammlung" icon={Lightbulb}>
-                <LineCollection />
+                <LineCollection userId={userId} />
             </Accordion>
 
             <Accordion title="Reim- & Synonym-Suchmaschine" icon={Search}>
@@ -38,9 +36,21 @@ const MyLyrics = ({ userId }) => {
             </Accordion>
             <Accordion title="Kreativ-Werkzeuge" icon={Wand2}>
                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 p-4 bg-black/20 rounded-lg">
-                    <CreativeTool title="Metaphern-Generator" />
-                    <CreativeTool title="Zeilen-Variationen" />
-                    <CreativeTool title="Satzvervollständiger" />
+                    <CreativeTool 
+                        title="Metaphern-Generator"
+                        placeholder="Wort/Konzept eingeben..."
+                        promptTemplate={(input) => `Erstelle 5 kreative und originelle Metaphern für das folgende Wort/Konzept: "${input}". Gib nur die 5 Metaphern als nummerierte Liste zurück.`}
+                    />
+                    <CreativeTool 
+                        title="Zeilen-Variationen"
+                        placeholder="Songzeile eingeben..."
+                        promptTemplate={(input) => `Erstelle 5 alternative Formulierungen für die folgende Songzeile: "${input}". Behalte die ursprüngliche Bedeutung bei, aber variiere Wortwahl und Stil. Gib nur die 5 Variationen als nummerierte Liste zurück.`}
+                    />
+                     <CreativeTool 
+                        title="Satzvervollständiger"
+                        placeholder="Angefangenen Satz eingeben..."
+                        promptTemplate={(input) => `Vervollständige den folgenden Satz auf 5 kreative und unerwartete Weisen: "${input}". Gib nur die 5 vollständigen Sätze als nummerierte Liste zurück.`}
+                    />
                 </div>
             </Accordion>
         </div>
