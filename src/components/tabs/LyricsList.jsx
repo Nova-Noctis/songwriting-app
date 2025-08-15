@@ -8,6 +8,7 @@ import { Edit, Save, Trash2, X } from 'lucide-react';
 
 const appId = 'default-songwriting-app';
 
+// NEUE MODAL-KOMPONENTE FÜR DIE BEARBEITUNG
 const EditModal = ({ lyric, onSave, onClose }) => {
     const [editText, setEditText] = useState(lyric.content);
 
@@ -17,20 +18,31 @@ const EditModal = ({ lyric, onSave, onClose }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={onClose}>
-            <div className="glass-panel rounded-2xl shadow-xl p-6 w-11/12 md:w-2/3 lg:w-1/2 space-y-4" onClick={e => e.stopPropagation()}>
+        // Backdrop / Overlay
+        <div 
+            className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"
+            onClick={onClose} // Schließt das Modal bei Klick auf den Hintergrund
+        >
+            {/* Modal-Container */}
+            <div 
+                className="glass-panel rounded-2xl shadow-xl p-6 w-11/12 md:w-2/3 lg:w-1/2 space-y-4"
+                onClick={e => e.stopPropagation()} // Verhindert, dass Klicks im Modal es schließen
+            >
                 <div className="flex justify-between items-center">
                     <h3 className="text-2xl font-bold text-gray-100">Text bearbeiten: <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-400">{lyric.title}</span></h3>
                     <button onClick={onClose} className="text-gray-400 hover:text-white">
                         <X size={24} />
                     </button>
                 </div>
+                
+                {/* Große Textarea für die Bearbeitung */}
                 <textarea 
                     value={editText} 
                     onChange={e => setEditText(e.target.value)} 
                     rows="15" 
                     className="w-full p-3 bg-black/30 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-gray-300 transition-all font-inter"
                 ></textarea>
+
                 <div className="flex justify-end space-x-4">
                     <button onClick={onClose} className="px-4 py-2 bg-black/20 text-white font-semibold rounded-lg hover:bg-white/20 border border-gray-600 font-orbitron">
                         Abbrechen
@@ -44,12 +56,14 @@ const EditModal = ({ lyric, onSave, onClose }) => {
     );
 };
 
+
 const LyricsList = ({ userId }) => {
     const [lyrics, setLyrics] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [newTitle, setNewTitle] = useState('');
     const [newContent, setNewContent] = useState('');
+    // State, um das zu bearbeitende Lied im Modal zu speichern
     const [editingLyric, setEditingLyric] = useState(null);
 
     useEffect(() => {
@@ -132,6 +146,7 @@ const LyricsList = ({ userId }) => {
                 <p className="text-gray-500 font-inter">Noch keine Texte gespeichert.</p>
             )}
 
+            {/* Das Bearbeitungs-Modal wird hier gerendert, wenn ein Text ausgewählt wurde */}
             {editingLyric && (
                 <EditModal 
                     lyric={editingLyric}
