@@ -1,3 +1,44 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Grundlegende Stile und Schriftarten */
+body {
+    font-family: 'Inter', sans-serif; /* Standard-Schrift für Lesbarkeit */
+    color: #E0E0E0;
+    /* Grauer Hintergrund mit Farbverlauf und Spiegelungseffekten */
+    background-color: #1a1a1a;
+    background-image: 
+        radial-gradient(ellipse at 70% 30%, rgba(200, 200, 220, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 30% 70%, rgba(180, 180, 200, 0.1) 0%, transparent 40%);
+    background-attachment: fixed;
+}
+
+/* Futuristische Schrift für UI-Elemente */
+h1, h2, h3, h4, h5, label {
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Custom scrollbar für den eleganten Look */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+
+/* "Glassmorphism" Effekt-Klasse */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.05); /* Helleres, transparenteres Glas */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px); /* Für Safari-Kompatibilität */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Leuchteffekte für Buttons in Silber/Weiß */
+.glow-effect {
+    transition: all 0.3s ease;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0);
+}
+.glow-effect:hover {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3), 0 0 30px rgba(255, 255, 255, 0.15);
+}
