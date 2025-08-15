@@ -50,7 +50,7 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
         const externalLyricsReference = externalLyrics.map(lyric => lyric.content).join('\n\n---\n\n');
 
         const prompt = `
-            Du bist ein hochkreativer Songwriting-Assistent. Deine Aufgabe ist es, einen anspruchsvollen und emotional tiefgründigen Songtext zu erstellen, der sich an den folgenden, sehr spezifischen Regeln orientiert.
+            Du bist ein hochkreativer Songwriting-Assistent. Deine Aufgabe ist es, einen anspruchsvollen Melancholische Songs, Euphorische und fröhliche Songs, Aggressive oder wütende Songs, Entspannende und beruhigende Songs oder Romantische Songs, Songtext zu erstellen, der sich an den folgenden, sehr spezifischen Regeln orientiert.
             
             **BENUTZEREINGABEN:**
             - **Song-Idee:** ${idea}
@@ -64,19 +64,30 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
             - **Vermeidung von Klischees:** Benutze keine abgedroschenen Phrasen, Floskeln oder Klischees. Sei in jeder Zeile originell und unerwartet.
             - **Emotionale Darstellung ("Show, don't tell"):** Beschreibe Gefühle durch konkrete Handlungen, sensorische Details und Metaphern. Statt "Ich bin traurig", schreibe "Die Regentropfen strichen langsam über das Fenster".
             - **Sprachstil:** Orientiere dich am modernen deutschen Pop- und Rap-Stil. Nutze Umgangssprache authentisch. Anglizismen nur sparsam und gezielt einsetzen.
-            - **Emotionaler Ton (Künstler-Inspiration):** Kombiniere die folgenden Stimmungen: Billie Eilish, Ed Sheeran, Joji, Tarantino-Vibe.
+            - **Emotionaler Ton (Künstler-Inspiration):** Kombiniere die folgenden Stimmungen: Billie Eilish, Ed Sheeran, Joji.
+            - **Achte darauf das die Zeilen in der deutschen Sprache Sinn ergeben.
+            - **Wenn ein Thema angegeben wird sollen dieses Thema mit Details beschreiben.
+            - ** Wenn die selbe Song-Idee mehrmals generiert wird, soll der Songtext jedes Mal anders sein.
+            - ** Achte auf vielfältige Wortwahl und vermeide Wiederholungen. Verwende Synonyme und unterschiedliche Satzstrukturen, um den Text abwechslungsreich zu gestalten.
+            - ** Verwende gezielt Kettenreime um einen stakatoartigen Effekt zu erzeugen. Achte darauf, dass die Silbenanzzahl und die Vokale übereinstimmen. Verwende diese Technik auch nur im Verse und nicht im Refrain.^
+            - ** Vermeide K.I-typische Phrasen. Verwende stattdessen kreative Umschreibungen mit adjektiven und Verben um die Emotionen und Stimmungen zu transportieren.
+            - ** Wenn du Zeilen aus der Englischen Generierung ins deutsche übersetzt, achte darauf, dass die Zeilen in der deutschen Sprache Sinn ergeben.
+            - ** Orientiere dich an den folgenden Künstlern: Cro, Majan, Montez, Nina Chuba, Rin, Lune, Bausa, Paula Hartmann, AnneMay Kantereit, Mark Forster, Madeline Juno, Wincent Weiss, Capser, Apache 207, Luciano.
+            - ** Der Text soll sich immer an modernen deutschen Pop- und Rap-Stil orientieren. Verwende eine Mischung aus eingängigen Melodien und emotional ergreifenden Texten.
 
             **2. Storytelling-Struktur und -Techniken:**
-            - **Narrative Struktur:** Der Song muss einem klaren "roten Faden" folgen.
-            - **Wiederkehrende Motive:** Verwende eine feststehende, bildhafte Phrase (z.B. "die Stadt mit dem Atem aus Beton").
+            - **Narrative Struktur:** Der Songinhalt muss einem klaren "roten Faden" folgen.
+            - **Wiederkehrende Motive:** Verwende eine feststehende, bildhafte Phrase.
             - **Atmosphärische Schauplätze:** Erschaffe lebendige, multisensorische Umgebungen.
             - **Dialoge und Perspektiven:** Integriere Verse, die wie ein Dialog klingen.
             - **Paradoxa:** Verwende paradoxe Aussagen (z.B. "Ich fand die Freiheit erst, als du meine Fesseln warst.").
 
             **3. Metrik und Reim-Regeln:**
-            - **Reimschema:** Setze Reimschemata (AABB, ABAB, ABBA) präzise um.
+            - **Reimschema:** Setze Reimschemata (AABB, ABAB, ABBA, ABCA, ABAC,) präzise um.
             - **Assonanz-Regel:** Vokal und Silbenanzahl müssen bei Assonanzen entsprechen.
             - **Flow und Rhythmus:** Variiere die Metrik durch unterschiedliche Silbenzahlen pro Zeile.
+            - **Verwende Flexibel perfekte und Assonante Reime in den Endungen. Achte darauf das die Umlaute und die Silbenanzahl übereinstimmen.(z.B. Chromosomen - Monotonen, Schmetterling - Wetter bringen, etc.)
+            - **Reime mehrere Worte miteinander. Achte darauf das die Silbenanzahl übereinstimmt. (z.B. "Schmetterling - Wetter bringen - Federn fliegen lassen  - später liegen lassen")
 
             **STILISTISCHE REFERENZTEXTE (ALS INSPIRATION NUTZEN, NICHT KOPIEREN):**
             --- EIGENE TEXTE DES NUTZERS ---
