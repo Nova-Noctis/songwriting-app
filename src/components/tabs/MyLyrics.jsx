@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { collection, onSnapshot, query } from 'firebase/firestore';
 import { db } from '@/firebase/config.js';
-import { BookOpen, Mic2, Search, Wand2 } from 'lucide-react';
+import { BookOpen, Mic2, Search, Wand2, Lightbulb } from 'lucide-react';
 import Accordion from '@/components/ui/Accordion.jsx';
 import RhymeFinder from '@/components/tools/RhymeFinder.jsx';
 import SynonymFinder from '@/components/tools/SynonymFinder.jsx';
 import CreativeTool from '@/components/tools/CreativeTool.jsx';
-import LyricsList from './LyricsList.jsx'; // Korrigierter Pfad (gleicher Ordner)
+import LyricsList from './LyricsList.jsx';
+import LineCollection from './LineCollection.jsx'; // NEUER IMPORT
 
 const appId = 'default-songwriting-app';
 
@@ -41,9 +42,16 @@ const MyLyrics = ({ userId }) => {
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-100 flex items-center"><BookOpen className="mr-3 text-indigo-400"/>Dein Arbeitsbereich</h2>
+            
             <Accordion title="Deine eigenen Texte" icon={Mic2}>
                 <LyricsList userId={userId} lyrics={lyrics} isLoading={isLoadingLyrics} error={error} setError={setError} />
             </Accordion>
+
+            {/* NEUER AKKORDEON-BEREICH */}
+            <Accordion title="Line Sammlung" icon={Lightbulb}>
+                <LineCollection userId={userId} />
+            </Accordion>
+
             <Accordion title="Reim- & Synonym-Suchmaschine" icon={Search}>
                 <div className="grid md:grid-cols-2 gap-8">
                     <div>

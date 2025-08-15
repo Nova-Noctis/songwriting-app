@@ -17,26 +17,23 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
     const [isLoadingIdeas, setIsLoadingIdeas] = useState(false);
     const [generatedSong, setGeneratedSong] = useState(null);
     const [message, setMessage] = useState(null);
+    const [generatedIdeas, setGeneratedIdeas] = useState([]);
 
     const generateRandomIdeas = async () => {
         setIsLoadingIdeas(true);
-        const prompt = "Erstelle 5 kreative und unterschiedliche Song-Ideen für einen modernen deutschen Pop- oder Rap-Song. Jede Idee sollte nur ein kurzer Satz sein. Gib nur die 5 Sätze zurück, getrennt durch einen Zeilenumbruch, ohne Nummerierung oder zusätzliche Erklärungen.";
+        const prompt = "Erstelle 5 äußerst kreative und thematisch vielfältige Song-Ideen für einen modernen deutschen Pop- oder Rap-Song. Decke eine breite Palette an Themen ab, wie zum Beispiel Natur (ein Sturm zieht auf), Gesellschaftskritik (die Stille in einer lauten Stadt), Science-Fiction (der letzte Mensch auf der Erde findet eine alte Schallplatte) oder historische Ereignisse (ein Brief aus dem Krieg). Vermeide alltägliche, persönliche Beziehungsthemen oder Ideen, die sich nur um Social Media und das digitale Leben drehen. Jede Idee sollte nur ein kurzer, inspirierender Satz sein. Gib nur die 5 Sätze zurück, getrennt durch einen Zeilenumbruch, ohne Nummerierung oder zusätzliche Erklärungen.";
+        
         const response = await callGeminiAPI(prompt);
         
-        // KORREKTUR: Prüft, ob die Antwort ein gültiger String ist, bevor .split() aufgerufen wird.
         if (typeof response === 'string' && !response.startsWith('Fehler:')) {
             const ideas = response.split('\n').filter(line => line.trim() !== '');
-            if (ideas.length > 0) {
-                setIdea(ideas[0]);
-            }
+            setGeneratedIdeas(ideas);
         } else {
-            // Zeigt die Fehlermeldung von der API in der UI an.
             setMessage({ type: 'error', text: response });
         }
         setIsLoadingIdeas(false);
     };
 
-    // ... Der Rest der Komponente bleibt unverändert ...
     const handleGenerateSong = async () => {
         if (!idea) {
             setMessage({ type: 'error', text: 'Bitte gib eine Song-Idee ein.' });
@@ -50,44 +47,39 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
         const externalLyricsReference = externalLyrics.map(lyric => lyric.content).join('\n\n---\n\n');
 
         const prompt = `
-            Du bist ein hochkreativer Songwriting-Assistent. Deine Aufgabe ist es, einen anspruchsvollen Melancholische Songs, Euphorische und fröhliche Songs, Aggressive oder wütende Songs, Entspannende und beruhigende Songs oder Romantische Songs, Songtext zu erstellen, der sich an den folgenden, sehr spezifischen Regeln orientiert.
-            
+            Du bist ein urbaner Poet und Songwriter, tief verwurzelt in der deutschen Musikszene. Deine Sprache ist direkt, dein Blick für Details scharf. Du schreibst keine Texte, du malst Bilder mit Worten und schaffst Stimmungen, die man fühlen kann.
+            Deine Aufgabe ist es, einen authentischen und rohen Songtext zu erschaffen, der sich an den folgenden Leitplanken orientiert.
+
             **BENUTZEREINGABEN:**
             - **Song-Idee:** ${idea}
-            - **Perspektive:** ${perspective === 'Keine' ? 'Nicht spezifiziert, wähle die passendste.' : perspective}
-            - **Zusätzliche Anweisungen:** ${instructions || "Keine."}
+            - **Perspektive:** ${perspective === 'Keine' ? 'Wähle die passendste.' : perspective}
+            - **Zusätzliche Anweisungen:** ${instructions || "Keine besonderen."}
 
-            **REGELWERK (STRIKT EINZUHALTEN):**
+            **DEIN KREATIVES REGELWERK:**
 
-            **1. Stilistische Parameter und Lyrik-Regeln:**
-            - **Originalität der Wortwahl:** Verwende eine breite Vielfalt an Wörtern. VERMEIDE UNBEDINGT die folgenden Wörter: "Schatten", "Echo", "Kälte", "Glanz", "zerbricht", "rast", "kalt".
-            - **Vermeidung von Klischees:** Benutze keine abgedroschenen Phrasen, Floskeln oder Klischees. Sei in jeder Zeile originell und unerwartet.
-            - **Emotionale Darstellung ("Show, don't tell"):** Beschreibe Gefühle durch konkrete Handlungen, sensorische Details und Metaphern. Statt "Ich bin traurig", schreibe "Die Regentropfen strichen langsam über das Fenster".
-            - **Sprachstil:** Orientiere dich am modernen deutschen Pop- und Rap-Stil. Nutze Umgangssprache authentisch. Anglizismen nur sparsam und gezielt einsetzen.
-            - **Emotionaler Ton (Künstler-Inspiration):** Kombiniere die folgenden Stimmungen: Billie Eilish, Ed Sheeran, Joji.
-            - **Achte darauf das die Zeilen in der deutschen Sprache Sinn ergeben.
-            - **Wenn ein Thema angegeben wird sollen dieses Thema mit Details beschreiben.
-            - ** Wenn die selbe Song-Idee mehrmals generiert wird, soll der Songtext jedes Mal anders sein.
-            - ** Achte auf vielfältige Wortwahl und vermeide Wiederholungen. Verwende Synonyme und unterschiedliche Satzstrukturen, um den Text abwechslungsreich zu gestalten.
-            - ** Verwende gezielt Kettenreime um einen stakatoartigen Effekt zu erzeugen. Achte darauf, dass die Silbenanzzahl und die Vokale übereinstimmen. Verwende diese Technik auch nur im Verse und nicht im Refrain.^
-            - ** Vermeide K.I-typische Phrasen. Verwende stattdessen kreative Umschreibungen mit adjektiven und Verben um die Emotionen und Stimmungen zu transportieren.
-            - ** Wenn du Zeilen aus der Englischen Generierung ins deutsche übersetzt, achte darauf, dass die Zeilen in der deutschen Sprache Sinn ergeben.
-            - ** Orientiere dich an den folgenden Künstlern: Cro, Majan, Montez, Nina Chuba, Rin, Lune, Bausa, Paula Hartmann, AnneMay Kantereit, Mark Forster, Madeline Juno, Wincent Weiss, Capser, Apache 207, Luciano.
-            - ** Der Text soll sich immer an modernen deutschen Pop- und Rap-Stil orientieren. Verwende eine Mischung aus eingängigen Melodien und emotional ergreifenden Texten.
+            **1. Künstlerische DNA & Vibe (Dein Sound):**
+            - **Kern-Inspiration:** Dein Stil ist eine Mischung aus urbaner Melancholie und lässigem Flow, gepaart mit selbstbewusster Direktheit und hoher lyrischer Dichte. Orientiere dich an Künstlern wie Cro, Majan, Montez, Nina Chuba, Rin, Lune, Bausa, Paula Hartmann, AnnenMayKantereit, Casper, Apache 207, Luciano.
+            - **Grundstimmung:** Erzeuge einen "Nachtfahrt-Vibe". Denk an vorbeiziehende Lichter, fragmentarische Gedanken, ungesagte Worte. Die Atmosphäre ist oft wichtiger als die explizite Handlung.
+            - **Sprachgefühl:** Nutze eine moderne, authentische Umgangssprache. Integriere Anglizismen und Slang, aber nur, wenn sie natürlich klingen (z.B. "viben", "lost", "real talk"). Sätze dürfen unvollständig sein (Ellipsen), um den Gedankenfluss nachzubilden.
 
-            **2. Storytelling-Struktur und -Techniken:**
-            - **Narrative Struktur:** Der Songinhalt muss einem klaren "roten Faden" folgen.
-            - **Wiederkehrende Motive:** Verwende eine feststehende, bildhafte Phrase.
-            - **Atmosphärische Schauplätze:** Erschaffe lebendige, multisensorische Umgebungen.
-            - **Dialoge und Perspektiven:** Integriere Verse, die wie ein Dialog klingen.
-            - **Paradoxa:** Verwende paradoxe Aussagen (z.B. "Ich fand die Freiheit erst, als du meine Fesseln warst.").
+            **2. Lyrische Technik ("Show, Don't Tell" 2.0):**
+            - **Kopfkino statt Behauptung:** Beschreibe Gefühle nicht, sondern zeige sie. Statt "ich bin traurig" schreib "mein Lächeln fühlt sich an wie geliehen" oder "die Kippe schmeckt nach gar nichts". Nutze konkrete, sensorische Details.
+            - **Sinnvolle Bildsprache:** Metaphern und Vergleiche müssen kreativ, aber nachvollziehbar und grammatikalisch korrekt sein. Vermeide unlogische Verbindungen wie "Die Stadt atmet Licht". Beschreibe stattdessen, wie die Lichter der Stadt pulsieren oder wie die Stadt nach Abgasen "atmet".
+            - **Kreative Umschreibung & Wort-Tabus:** Vermeide klischeehafte Bilder. Die folgenden Worte sind für dich tabu, zwing dich, sie kreativ zu umschreiben:
+              - **Schatten** -> Umschreibe es als "wo das Licht nicht hinkommt", "die Dunkelheit, die ein Körper wirft", "der kalte Zwilling auf dem Asphalt".
+              - **Vermeide außerdem:** Echo, Kälte, Glanz, zerbricht, rast, kalt.
+            - **Dynamische Wortwahl:** Analysiere deinen eigenen Text auf Wortwiederholungen. Ersetze proaktiv häufig vorkommende oder generische Wörter durch passende, stärkere Synonyme, um einen reichen und nicht-roboterhaften Wortschatz zu gewährleisten.
 
-            **3. Metrik und Reim-Regeln:**
-            - **Reimschema:** Setze Reimschemata (AABB, ABAB, ABBA, ABCA, ABAC,) präzise um.
-            - **Assonanz-Regel:** Vokal und Silbenanzahl müssen bei Assonanzen entsprechen.
-            - **Flow und Rhythmus:** Variiere die Metrik durch unterschiedliche Silbenzahlen pro Zeile.
-            - **Verwende Flexibel perfekte und Assonante Reime in den Endungen. Achte darauf das die Umlaute und die Silbenanzahl übereinstimmen.(z.B. Chromosomen - Monotonen, Schmetterling - Wetter bringen, etc.)
-            - **Reime mehrere Worte miteinander. Achte darauf das die Silbenanzahl übereinstimmt. (z.B. "Schmetterling - Wetter bringen - Federn fliegen lassen  - später liegen lassen")
+            **3. Storytelling & Struktur:**
+            - **Narrativer Kern:** Dein Text braucht einen roten Faden, aber er muss nicht linear sein. Es kann eine Momentaufnahme, ein innerer Monolog oder ein Dialogfragment sein.
+            - **Wiederkehrendes Leitmotiv:** Verankere eine prägnante, bildhafte Phrase, die im Song immer wieder auftaucht und an Bedeutung gewinnt.
+            - **Paradoxe Gefühle:** Arbeite mit Widersprüchen, um komplexe Emotionen darzustellen (z.B. "Fühl mich frei in deinen Ketten").
+
+            **4. Flow & Rhythmus (Musikalität der Sprache):**
+            - **Reimstruktur:**
+              - **Verse (Strophen):** Nutze mehrsilbige Reime und Assonanzen für einen gesprächsartigen Flow. Kettenreime sind hier perfekt, um Tempo aufzubauen.
+              - **Hook (Refrain):** Der Refrain sollte einfacher und prägnanter sein. Klare, einprägsame Reime (AABB, ABAB) funktionieren hier am besten.
+            - **Rhythmusgefühl:** Variiere die Satzlänge und Silbenanzahl stark. Kurze, abgehackte Zeilen können auf lange, fließende folgen.
 
             **STILISTISCHE REFERENZTEXTE (ALS INSPIRATION NUTZEN, NICHT KOPIEREN):**
             --- EIGENE TEXTE DES NUTZERS ---
@@ -132,6 +124,7 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
                 setInstructions('');
                 setGeneratedSong(null);
                 setMessage(null);
+                setGeneratedIdeas([]);
                 setActiveTab('Eigene Texte');
             }, 1500);
 
@@ -151,6 +144,28 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
                         <textarea id="song-idea" value={idea} onChange={(e) => setIdea(e.target.value)} placeholder="Z.B. Zwei Freunde treffen sich nach langer Zeit wieder..." className="w-full p-2 bg-gray-900 border border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-200" rows="3"></textarea>
                          <CustomButton onClick={generateRandomIdeas} isLoading={isLoadingIdeas} className="mt-2 bg-gray-700 hover:bg-gray-600" icon={Wand2}>Zufällige Idee generieren</CustomButton>
                     </div>
+
+                    {generatedIdeas.length > 0 && (
+                        <div className="mt-4 p-4 bg-gray-900/50 rounded-lg border border-gray-700">
+                            <h4 className="font-semibold text-gray-300 mb-2">Wähle eine Idee aus:</h4>
+                            <ul className="space-y-2">
+                                {generatedIdeas.map((genIdea, index) => (
+                                    <li key={index}>
+                                        <button
+                                            onClick={() => {
+                                                setIdea(genIdea);
+                                                setGeneratedIdeas([]);
+                                            }}
+                                            className="w-full text-left p-2 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors text-gray-300"
+                                        >
+                                            {genIdea}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    
                     <div>
                         <label htmlFor="perspective" className="block text-sm font-medium text-gray-300 mb-1">Perspektive</label>
                         <select id="perspective" value={perspective} onChange={(e) => setPerspective(e.target.value)} className="w-full p-2 bg-gray-900 border border-gray-600 rounded-md focus:ring-indigo-500 focus:border-indigo-500 text-gray-200">
