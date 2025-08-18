@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Play, Pause, RotateCcw, MonitorPlay } from 'lucide-react';
 
-// **NEUE HILFSFUNKTION:** Parst den Songtext in ein Array aus Objekten
-// Jedes Objekt enthält den Titel (z.B. "Strophe 1") und den Inhalt des Abschnitts.
 const parseSongForNavigation = (songtext) => {
     if (!songtext) return [];
     const parts = songtext.split(/(\[.*?\])/).filter(Boolean);
@@ -29,15 +27,12 @@ const Teleprompter = ({ myLyrics }) => {
     const textContainerRef = useRef(null);
     const scrollAnimationRef = useRef(null);
     const sectionRefs = useRef([]);
-    // **ÄNDERUNG 1: Ein Ref für die Geschwindigkeit, um Live-Updates zu ermöglichen**
     const speedRef = useRef(speed);
 
-    // Hält den speedRef immer synchron mit dem State vom Slider
     useEffect(() => {
         speedRef.current = speed;
     }, [speed]);
 
-    // Handler für die Auswahl eines Textes aus dem Dropdown
     const handleSelectChange = (e) => {
         const lyricId = e.target.value;
         setSelectedLyricId(lyricId);
@@ -54,13 +49,9 @@ const Teleprompter = ({ myLyrics }) => {
         handleReset();
     };
 
-    // Funktion, die das Scrollen durchführt
     const scrollStep = useCallback(() => {
         if (textContainerRef.current) {
             const container = textContainerRef.current;
-            
-            // **ÄNDERUNG 2: Liest die Geschwindigkeit aus dem Ref und verwendet eine bessere Formel**
-            // Die Formel wurde angepasst, um auch bei niedrigen Werten eine sichtbare Bewegung zu erzeugen.
             const scrollAmount = (speedRef.current / 50); 
             container.scrollTop += scrollAmount;
 
@@ -71,7 +62,7 @@ const Teleprompter = ({ myLyrics }) => {
                 scrollAnimationRef.current = requestAnimationFrame(scrollStep);
             }
         }
-    }, []); // Die Speed-Abhängigkeit wird hier entfernt, da wir den Ref verwenden
+    }, []);
 
     const handleNavClick = (index) => {
         if (sectionRefs.current[index]) {
@@ -130,7 +121,8 @@ const Teleprompter = ({ myLyrics }) => {
                         className="w-full p-3 bg-black/30 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-gray-300 transition-all"
                     >
                         <option value="">-- Bitte Text auswählen --</option>
-                        {myLyrics.map(lyric => (
+                        {/* Sicherheitsabfrage hinzugefügt, falls myLyrics nicht geladen ist */}
+                        {Array.isArray(myLyrics) && myLyrics.map(lyric => (
                             <option key={lyric.id} value={lyric.id}>{lyric.title}</option>
                         ))}
                     </select>
@@ -159,17 +151,26 @@ const Teleprompter = ({ myLyrics }) => {
                     >
                         {selectedLyricId ? (
                             <div className="py-24 px-8">
-                                {structuredSong.map((part, index) => (
-                                    <div 
-                                        key={index} 
-                                        ref={el => sectionRefs.current[index] = el} 
-                                        className="mb-16"
-                                    >
-                                        <p className="whitespace-pre-wrap text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold text-white font-inter">
-                                            {part.content}
-                                        </p>
-                                    </div>
-                                ))}
+                                {/* **ÄNDERUNG: Logik zur Anzeige des Textes** */}
+                                {structuredSong.length > 0 ? (
+                                    // Fall 1: Text hat [Abschnitte], zeige ihn strukturiert an
+                                    structuredSong.map((part, index) => (
+                                        <div 
+                                            key={index} 
+                                            ref={el => sectionRefs.current[index] = el} 
+                                            className="mb-16"
+                                        >
+                                            <p className="whitespace-pre-wrap text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold text-white font-inter">
+                                                {part.content}
+                                            </p>
+                                        </div>
+                                    ))
+                                ) : (
+                                    // Fall 2: Text hat keine Abschnitte, zeige den gesamten Text an
+                                    <p className="whitespace-pre-wrap text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold text-white font-inter">
+                                        {selectedLyricContent}
+                                    </p>
+                                )}
                             </div>
                         ) : (
                             <div className="flex items-center justify-center h-full">
