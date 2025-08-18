@@ -8,7 +8,7 @@ import { Edit, Save, Trash2, X } from 'lucide-react';
 
 const appId = 'default-songwriting-app';
 
-// NEUE MODAL-KOMPONENTE FÜR DIE BEARBEITUNG
+// MODAL-KOMPONENTE FÜR DIE BEARBEITUNG
 const EditModal = ({ lyric, onSave, onClose }) => {
     const [editText, setEditText] = useState(lyric.content);
 
