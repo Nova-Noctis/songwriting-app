@@ -30,7 +30,7 @@ const parseSongtextForDisplay = (songtext) => {
 const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
     const [idea, setIdea] = useState('');
     const [perspective, setPerspective] = useState('Keine');
-    const [textType, setTextType] = useState('Uplifting Pop Song');
+    const [textType, setTextType] = useState('Freie Wahl');
     const [performanceStyle, setPerformanceStyle] = useState('Gesungen');
     const [negativePrompt, setNegativePrompt] = useState('');
     const [instructions, setInstructions] = useState('');
@@ -43,8 +43,8 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
     const [generatedIdeas, setGeneratedIdeas] = useState([]);
     const [message, setMessage] = useState(null);
 
-    const textTypes = ['Uplifting Pop Song', 'Urbane Melancholie', 'Trap Representer', 'Sad Lovesong', 'Sexual Lovesong', 'Poetry'];
-    const performanceStyles = ['Gesungen', 'Rap', 'Spoken Word'];
+    const textTypes = ['Freie Wahl', 'Uplifting Pop Song', 'Urbane Melancholie', 'Trap Representer', 'Sad Lovesong', 'Sexual Lovesong', 'Poetry'];
+    const performanceStyles = ['Gesungen', 'Rap', 'Spoken Word', 'Gesang (Chorus) & Rap (Verse)'];
     const perspectives = [ 'Keine', 'Ich-Perspektive', 'Du-Perspektive', 'Er/Sie/Es-Perspektive (Dritte-Person-Perspektive)', 'Wir-Perspektive', 'Ihr-Perspektive', 'Auktoriale (allwissende) Perspektive', 'Neutrale (beobachtende) Perspektive', 'Wechselnde Perspektiven' ];
 
     const generateRandomIdeas = useCallback(async () => {
@@ -98,6 +98,7 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
         const externalLyricsReference = externalLyrics.map(lyric => lyric.content).join('\n\n---\n\n');
 
         const textTypeInstructions = {
+            'Freie Wahl': "Wähle basierend auf der Song-Idee eine passende emotionale Ausrichtung (z.B. melancholisch, euphorisch, aggressiv etc.) und setze diese konsequent um.",
             'Uplifting Pop Song': "Fokus auf eine positive, energetische und hoffnungsvolle Botschaft. Der Text soll Mut machen und eine eingängige, helle Atmosphäre schaffen.",
             'Urbane Melancholie': "Fokus auf eine nachdenkliche, melancholische Stimmung im Kontext einer nächtlichen, urbanen Szenerie. Themen sind oft Einsamkeit, verpasste Gelegenheiten und die Schönheit im Vergänglichen.",
             'Trap Representer': "Fokus auf Selbstbewusstsein, Erfolg und den Weg dorthin. Die Sprache ist direkt, oft prahlerisch, aber mit einem Hauch von Verletzlichkeit über die Vergangenheit.",
@@ -109,14 +110,17 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
         const performanceStyleInstructions = {
             'Gesungen': "Der Text sollte durchgehend melodiös und singbar sein. Achte auf fließende Vokal-Übergänge und einen klaren Rhythmus, der sich für eine Gesangsmelodie eignet.",
             'Rap': "Der Text sollte einen klaren Rap-Flow ermöglichen. Nutze rhythmische Betonungen, Binnenreime und einen eher sprechnahen Duktus, besonders in den Strophen.",
-            'Spoken Word': "Der Text sollte sich wie ein vorgetragenes Gedicht oder ein intensiver Monolog anfühlen. Der Rhythmus ist freier und wird stark vom Inhalt und der Emotion bestimmt, weniger von einem festen Takt."
+            'Spoken Word': "Der Text sollte sich wie ein vorgetragenes Gedicht oder ein intensiver Monolog anfühlen. Der Rhythmus ist freier und wird stark vom Inhalt und der Emotion bestimmt, weniger von einem festen Takt.",
+            'Gesang (Chorus) & Rap (Verse)': "Kombiniere beide Stile: Die Strophen (Verse) sollen einen klaren Rap-Flow haben (rhythmisch, sprechnah). Der Refrain (Chorus/Hook) hingegen muss extrem eingängig, melodisch und gesungen sein."
         };
 
         const selectedTextTypeInstruction = textTypeInstructions[textType];
         const selectedPerformanceStyleInstruction = performanceStyleInstructions[performanceStyle];
 
         const prompt = `
-            Du bist ein Texter, der für seine komplexen Reimketten und sein rohes, visuelles Storytelling bekannt ist. Deine Sprache ist direkt, deine Metaphern sind konkret und aus dem Leben gegriffen. Du erschaffst dichte Atmosphären durch präzise Beobachtungen.
+            **Simulationsbefehl:**
+            Du bist ein Songwriter für das Hier und Jetzt. Dein Stil ist die Schnittmenge aus urbaner Poesie und eingängigem Pop und Rap, der die Grundstimmung des Songs präzise an das jeweilige Thema anpasst und sich dabei souverän zwischen den Polen von nächtlicher Melancholie und tanzbarer, sonniger Leichtigkeit bewegt."
+            Deine Superkraft: Du verpackst rohe, ehrliche Emotionen und messerscharfe Alltagsbeobachtungen in Melodien, die sofort ins Ohr gehen. Du schreibst Songs, die man nachts allein mit Kopfhörern im Bus hören kann, zu denen man aber auch am Wochenende im Club tanzen will.
 
             **ÜBERGEORDNETE ANWEISUNG:**
             - **Art des Textes:** ${selectedTextTypeInstruction}
@@ -141,11 +145,11 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
             - **Aktive & Direkte Sprache (Show, Don't Tell):** Zeige Gefühle ausschließlich durch konkrete Handlungen und Beobachtungen.
             - **Haltung:** Der lyrische Inhalt soll in der Reimstruktur wieder zu erkennen sein. Beispiel: Aggressive Inhalte sind mehr abgehakt, während Liebessongs langsam und weich sind.
 
-            **3. Lyrische Technik & Flow:**
-            - **Anspruchsvolle Reimketten (Verse):** Baue in den Strophen gezielt anspruchsvolle, mehrsilbige Reimketten ein, die sich über mehrere Zeilen erstrecken und ein inhaltliches Gesamtbild erzeugen.
-              - **WICHTIG:** Die Beispiele dienen nur zur Veranschaulichung der Technik, ihr Inhalt darf unter keinen Umständen im generierten Text verwendet werden.
-              - **Anwendung:** Setze diese Technik gezielt ein, um den Flow zu steigern, aber achte darauf, dass der Text flüssig und der Inhalt immer sinnvoll bleibt.
-            - **Eingängiger Hook (Refrain):** Der Refrain muss einfacher und prägnanter sein. Hier sind klare Reime und eine rhythmische Wiederholung von Schlüsselwörtern perfekt.
+            **3. Lyrische Technik & Flow (Fortgeschritten):**
+            - **Schwerpunkt Reimketten & Assonante Reime:** Konstruiere lange Reimketten, die sich über 4-8 Zeilen erstrecken. Der Fokus liegt nicht auf perfekten Reimen, sondern auf assonanten Reimen, also der exakten Wiederholung der Vokalabfolge im Reimwort.
+            - **Schwerpunkt Silbenteilung & Satzbildung (Mehrsilbigkeit):** Verwende gezielt lange, mehrsilbige und zusammengesetzte Substantive als Reimwörter. Baue den Satz so um diese Reimwörter herum, dass sie natürlich klingen.
+            - **Schwerpunkt Wortspiele & Doppeldeutigkeiten:** Integriere gezielt Wortspiele und Homophone.
+            - **Zusatz-Schwerpunkt Binnenreime (Interne Reime):** Platziere Reime auch innerhalb der Zeilen, um den Rhythmus zu verdichten.
 
             **4. Szenario & Wortwahl:**
             - **Konkretes Szenario:** Verankere den Text in einem klaren, visuellen Szenario.
