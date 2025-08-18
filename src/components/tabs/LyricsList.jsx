@@ -16,7 +16,7 @@ const EditModal = ({ lyric, onSave, onClose }) => {
         onSave(lyric.id, editText);
         onClose();
     };
-
+// Finale Version des Modal
     return (
         // Backdrop / Overlay
         <div 
