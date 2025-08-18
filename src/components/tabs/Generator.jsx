@@ -141,6 +141,7 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
             - **Schaffe filmreife, hyper-dramatische Szenen:** Male kurze, extreme Bilder, die im Kopf bleiben. Zum Beispiel: 'Steh mit der Schaufel hier im Regen', 'Mische Benzin in meine Coke'.
             - **Integriere Alltagsbeobachtungen und urbane Details:** Nutze Elemente wie 'Neonröhren', 'Kopfsteinpflaster', 'Flaschen klirren', 'Bierdunst', um eine raue, authentische Atmosphäre zu schaffen.
             - **Dynamische Sinneseindrücke:** Beschreibe nicht nur, was die Figur sieht, sondern wie sich die Wahrnehmung verändert. Geräusche werden lauter, Lichter verschwimmen, Gerüche werden intensiver.
+            - **Vermeide generische Bilder:** STRIKT VERMEIDEN: "Der Wind flüstert", "Der Regen trommelt", "Die Sonne lacht". ERSETZE DURCH: "Der Wind heult durch die Gassen", "Der Regen peitscht gegen die Scheiben", "Die Sonne brennt auf dem Asphalt". Suche immer nach dem spezifischeren, stärkeren Verb.
 
             **2. Sprache & Haltung:**
             - **Aktive & Direkte Sprache (Show, Don't Tell):** Zeige Gefühle ausschließlich durch konkrete Handlungen und Beobachtungen.
