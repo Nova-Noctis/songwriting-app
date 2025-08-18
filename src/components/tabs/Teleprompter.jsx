@@ -23,7 +23,7 @@ const Teleprompter = ({ myLyrics }) => {
         handleReset(); // Setzt den Scroll-Vorgang bei Textwechsel zurück
     };
 
-    // **ÄNDERUNG 1: Die Logik zum Stoppen und die Scroll-Geschwindigkeit wurden korrigiert.**
+    // **ÄNDERUNG 1: Die Logik zum Stoppen und die Scroll-Geschwindigkeit wurden bereinigt korrigiert.**
     const scrollStep = useCallback(() => {
         if (textContainerRef.current) {
             const container = textContainerRef.current;
