@@ -1,14 +1,41 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Play, Pause, RotateCcw, MonitorPlay } from 'lucide-react';
 
+// **NEUE HILFSFUNKTION:** Parst den Songtext in ein Array aus Objekten
+// Jedes Objekt enthält den Titel (z.B. "Strophe 1") und den Inhalt des Abschnitts.
+const parseSongForNavigation = (songtext) => {
+    if (!songtext) return [];
+    const parts = songtext.split(/(\[.*?\])/).filter(Boolean);
+    const structuredText = [];
+    for (let i = 0; i < parts.length; i++) {
+        if (parts[i].startsWith('[') && parts[i].endsWith(']')) {
+            structuredText.push({
+                header: parts[i].slice(1, -1),
+                content: parts[i + 1] ? parts[i + 1].trim() : ''
+            });
+            i++;
+        }
+    }
+    return structuredText;
+};
+
 const Teleprompter = ({ myLyrics }) => {
     const [selectedLyricId, setSelectedLyricId] = useState('');
-    const [selectedLyric, setSelectedLyric] = useState(null);
-    const [speed, setSpeed] = useState(25); // Startgeschwindigkeit (1-100)
+    const [selectedLyricContent, setSelectedLyricContent] = useState('');
+    const [structuredSong, setStructuredSong] = useState([]);
+    const [speed, setSpeed] = useState(25);
     const [isScrolling, setIsScrolling] = useState(false);
     
     const textContainerRef = useRef(null);
     const scrollAnimationRef = useRef(null);
+    const sectionRefs = useRef([]);
+    // **ÄNDERUNG 1: Ein Ref für die Geschwindigkeit, um Live-Updates zu ermöglichen**
+    const speedRef = useRef(speed);
+
+    // Hält den speedRef immer synchron mit dem State vom Slider
+    useEffect(() => {
+        speedRef.current = speed;
+    }, [speed]);
 
     // Handler für die Auswahl eines Textes aus dem Dropdown
     const handleSelectChange = (e) => {
@@ -16,23 +43,27 @@ const Teleprompter = ({ myLyrics }) => {
         setSelectedLyricId(lyricId);
         if (lyricId) {
             const lyric = myLyrics.find(l => l.id === lyricId);
-            setSelectedLyric(lyric);
+            if (lyric) {
+                setSelectedLyricContent(lyric.content);
+                setStructuredSong(parseSongForNavigation(lyric.content));
+            }
         } else {
-            setSelectedLyric(null);
+            setSelectedLyricContent('');
+            setStructuredSong([]);
         }
-        handleReset(); // Setzt den Scroll-Vorgang bei Textwechsel zurück
+        handleReset();
     };
 
-    // **ÄNDERUNG 1: Die Logik zum Stoppen und die Scroll-Geschwindigkeit wurde korrigiert.**
+    // Funktion, die das Scrollen durchführt
     const scrollStep = useCallback(() => {
         if (textContainerRef.current) {
             const container = textContainerRef.current;
             
-            // Die Scroll-Distanz wurde erhöht, um eine sichtbare Bewegung zu erzeugen.
-            const scrollAmount = (speed / 100) * 1.5; 
+            // **ÄNDERUNG 2: Liest die Geschwindigkeit aus dem Ref und verwendet eine bessere Formel**
+            // Die Formel wurde angepasst, um auch bei niedrigen Werten eine sichtbare Bewegung zu erzeugen.
+            const scrollAmount = (speedRef.current / 50); 
             container.scrollTop += scrollAmount;
 
-            // Stoppt, wenn das Ende erreicht ist und bricht die Animation ab.
             if (container.scrollTop >= container.scrollHeight - container.clientHeight) {
                 setIsScrolling(false);
                 cancelAnimationFrame(scrollAnimationRef.current);
@@ -40,17 +71,24 @@ const Teleprompter = ({ myLyrics }) => {
                 scrollAnimationRef.current = requestAnimationFrame(scrollStep);
             }
         }
-    }, [speed]);
+    }, []); // Die Speed-Abhängigkeit wird hier entfernt, da wir den Ref verwenden
 
-    // Startet das Scrollen
+    const handleNavClick = (index) => {
+        if (sectionRefs.current[index]) {
+            sectionRefs.current[index].scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+    };
+
     const handlePlay = () => {
-        if (!isScrolling && selectedLyric) {
+        if (!isScrolling && selectedLyricId) {
             setIsScrolling(true);
             scrollAnimationRef.current = requestAnimationFrame(scrollStep);
         }
     };
 
-    // Pausiert das Scrollen
     const handlePause = () => {
         if (isScrolling) {
             setIsScrolling(false);
@@ -58,7 +96,6 @@ const Teleprompter = ({ myLyrics }) => {
         }
     };
 
-    // Setzt die Scroll-Position auf den Anfang zurück
     const handleReset = () => {
         setIsScrolling(false);
         cancelAnimationFrame(scrollAnimationRef.current);
@@ -67,12 +104,15 @@ const Teleprompter = ({ myLyrics }) => {
         }
     };
 
-    // Stellt sicher, dass die Animation gestoppt wird, wenn die Komponente verlassen wird
     useEffect(() => {
         return () => cancelAnimationFrame(scrollAnimationRef.current);
     }, []);
+    
+    useEffect(() => {
+        sectionRefs.current = sectionRefs.current.slice(0, structuredSong.length);
+     }, [structuredSong]);
 
-    const isDisabled = !selectedLyric;
+    const isDisabled = !selectedLyricId;
 
     return (
         <div className="space-y-8">
@@ -96,16 +136,41 @@ const Teleprompter = ({ myLyrics }) => {
                     </select>
                 </div>
 
-                {/* Teleprompter-Anzeige */}
-                <div className="bg-black/50 rounded-lg p-4 h-[50vh] flex flex-col">
+                <div className="bg-black/50 rounded-lg h-[60vh] flex">
+                    <div className="w-48 flex-shrink-0 border-r border-white/10 overflow-y-auto p-2">
+                        <h3 className="font-orbitron text-gray-400 text-sm p-2">Abschnitte</h3>
+                        <ul className="space-y-1">
+                            {structuredSong.map((part, index) => (
+                                <li key={index}>
+                                    <button 
+                                        onClick={() => handleNavClick(index)}
+                                        className="w-full text-left text-sm text-gray-300 px-3 py-2 rounded-md hover:bg-white/10 transition-colors"
+                                    >
+                                        {part.header}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
                     <div 
                         ref={textContainerRef}
-                        className="flex-grow overflow-hidden text-center"
+                        className="flex-grow overflow-y-auto text-center"
                     >
-                        {selectedLyric ? (
-                            <p className="whitespace-pre-wrap text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold text-white py-24 font-inter">
-                                {selectedLyric.content}
-                            </p>
+                        {selectedLyricId ? (
+                            <div className="py-24 px-8">
+                                {structuredSong.map((part, index) => (
+                                    <div 
+                                        key={index} 
+                                        ref={el => sectionRefs.current[index] = el} 
+                                        className="mb-16"
+                                    >
+                                        <p className="whitespace-pre-wrap text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold text-white font-inter">
+                                            {part.content}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
                         ) : (
                             <div className="flex items-center justify-center h-full">
                                 <p className="text-gray-500 font-orbitron">Kein Text ausgewählt.</p>
@@ -114,10 +179,8 @@ const Teleprompter = ({ myLyrics }) => {
                     </div>
                 </div>
 
-                {/* Steuerungsleiste */}
                 <div className="glass-panel rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
                     <div className="flex items-center space-x-4">
-                        {/* **ÄNDERUNG 2: Buttons werden deaktiviert, wenn kein Text ausgewählt ist.** */}
                         <button onClick={isScrolling ? handlePause : handlePlay} disabled={isDisabled} className="p-3 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                             {isScrolling ? <Pause size={24} /> : <Play size={24} />}
                         </button>
