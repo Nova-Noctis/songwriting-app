@@ -9,22 +9,16 @@ import { BrainCircuit, Sparkles, Save, Wand2, RefreshCw, Lightbulb } from 'lucid
 
 const appId = 'default-songwriting-app';
 
-// Hilfsfunktion: Parst den Songtext in ein Array aus Objekten für die Darstellung
 const parseSongtextForDisplay = (songtext) => {
     if (!songtext) return [];
     const parts = songtext.split(/(\[.*?\])/).filter(Boolean);
     const structuredText = [];
-
     for (let i = 0; i < parts.length; i++) {
         const part = parts[i];
         if (part.startsWith('[') && part.endsWith(']')) {
             const headerContent = part.slice(1, -1);
             const lyricsContent = parts[i + 1] ? parts[i + 1].trim() : '';
-            structuredText.push({
-                type: 'section',
-                header: headerContent,
-                lyrics: lyricsContent,
-            });
+            structuredText.push({ type: 'section', header: headerContent, lyrics: lyricsContent });
             i++;
         } else {
             structuredText.push({ type: 'lyricsOnly', lyrics: part.trim() });
@@ -33,24 +27,18 @@ const parseSongtextForDisplay = (songtext) => {
     return structuredText;
 };
 
-
 const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
-    // State für die Eingabefelder
     const [idea, setIdea] = useState('');
     const [perspective, setPerspective] = useState('Keine');
     const [textType, setTextType] = useState('Uplifting Pop Song');
     const [performanceStyle, setPerformanceStyle] = useState('Gesungen');
     const [negativePrompt, setNegativePrompt] = useState('');
     const [instructions, setInstructions] = useState('');
-
-    // State für den Generierungsprozess
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingIdeas, setIsLoadingIdeas] = useState(false);
     const [isRegenerating, setIsRegenerating] = useState(false);
     const [regeneratingPart, setRegeneratingPart] = useState(null);
     const [isLoadingInspire, setIsLoadingInspire] = useState(false);
-
-    // State für die Ergebnisse
     const [generatedSong, setGeneratedSong] = useState(null);
     const [generatedIdeas, setGeneratedIdeas] = useState([]);
     const [message, setMessage] = useState(null);
@@ -78,18 +66,14 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
         setMessage(null);
         setGeneratedSong(null);
         setGeneratedIdeas([]);
-        
         const randomTextType = textTypes[Math.floor(Math.random() * textTypes.length)];
         const randomPerformanceStyle = performanceStyles[Math.floor(Math.random() * performanceStyles.length)];
         const randomPerspective = perspectives[Math.floor(Math.random() * perspectives.length)];
-
         setTextType(randomTextType);
         setPerformanceStyle(randomPerformanceStyle);
         setPerspective(randomPerspective);
-
         const ideaPrompt = `Gib mir eine einzige, äußerst kreative und unerwartete Song-Idee für einen Text mit dem Thema "${randomTextType}". Die Idee sollte nur ein kurzer, inspirierender Satz sein.`;
         const randomIdea = await callGeminiAPI(ideaPrompt);
-        
         if (typeof randomIdea === 'string' && !randomIdea.startsWith('Fehler:')) {
             setIdea(randomIdea.trim());
         } else {
@@ -132,7 +116,7 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
         const selectedPerformanceStyleInstruction = performanceStyleInstructions[performanceStyle];
 
         const prompt = `
-            Du bist ein erfahrener und vielseitiger Songwriter für deutschen Pop, Urban-Pop und Indie. Deine Stärke ist es, spezifische Stimmungen und klare Geschichten in eine moderne, authentische Sprache zu gießen, die direkt ins Herz trifft.
+            Du bist ein Texter, der für seine komplexen Reimketten und sein rohes, visuelles Storytelling bekannt ist. Deine Sprache ist direkt, deine Metaphern sind konkret und aus dem Leben gegriffen. Du erschaffst dichte Atmosphären durch präzise Beobachtungen.
 
             **ÜBERGEORDNETE ANWEISUNG:**
             - **Art des Textes:** ${selectedTextTypeInstruction}
@@ -145,33 +129,30 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
             - **Inhalte, die vermieden werden sollen:** ${negativePrompt || "Keine besonderen."}
 
             **DEIN KREATIVES REGELWERK (DIESE REGELN GELTEN IMMER):**
-            **1. Thematische Umschreibung (Wichtigste Regel):**
-            - Das Kernthema der Song-Idee darf im Text **niemals direkt genannt** werden. Es muss ausschließlich durch Bilder, Handlungen und Gefühle umschrieben werden.
-
-            **2. Tonalität & Vibe (Der Sound):**
-            - **Grundstimmung:** Erzeuge eine cineastische Atmosphäre. Denk an einen Film: die Spannung zwischen dem Gesagten und Ungesagten. Die Stimmung ist entscheidend.
-            - **Sprache:** Schreibe in einer klaren, direkten und modernen Umgangssprache. Der Text muss sich anfühlen wie ein echter Gedanke oder ein belauschtes Gespräch.
-
-            **3. Storytelling & Emotion (Das Herz):**
-            - **Geschichte > Poesie:** Eine klare, nachvollziehbare Geschichte oder Situation steht im Mittelpunkt.
-            - **Dynamische Szenen & Entwicklung:** Die Geschichte darf nicht statisch sein. Sie muss sich durch verschiedene Momente oder emotionale Zustände bewegen.
-            - **Der Twist:** Baue ein überraschendes Element oder einen unerwarteten Perspektivwechsel ein, idealerweise in der Bridge.
-            - **Konkretes "Show, Don't Tell":** Zeige Emotionen durch präzise, alltägliche Beobachtungen und Handlungen.
-
-            **4. Lyrische Technik & Originalität:**
-            - **Intelligente & Effiziente Bildsprache:** Nutze eine anspruchsvolle, intelligente Wortwahl. Male detailreiche Bilder durch den gezielten Einsatz von starken Verben und prägnanten Adjektiven, ohne die Zeilen unnötig lang werden zu lassen.
-            - **Kraftvolle Umschreibungen statt Klischees:** Vermeide abgedroschene Darstellungen wie "Die Luft ist schwer". Formuliere stattdessen ungewöhnliche, kraftvolle Umschreibungen.
-            - **Wort-Tabus:** Vermeide klischeehafte Bilder und die Worte: Schatten, Echo, Kälte, Glanz, zerbricht, rast, kalt, Asphalt.
-            - **Dynamische Wortwahl:** Achte aktiv auf Wortwiederholungen. Ersetze generische Wörter durch stärkere Synonyme.
-            - **Achte auf korrekte deutsche Grammatik und Satzbau.
-
-            **5. Flow & Musikalität (Struktur von Strophe und Refrain):**
-            - **Verse (Strophen) - Anspruchsvolle Reimketten:** Baue in den Strophen gezielt anspruchsvolle, mehrsilbige Reimketten ein, die sich über mehrere Zeilen erstrecken.
-            - **Hook (Refrain) - Eingängige Melodik:** Der Refrain muss im starken Kontrast zur Strophe stehen: extrem eingängig (catchy), melodisch und sofort singbar.
-            - **Rhythmusgefühl:** Variiere die Satzlänge stark, um Dynamik und Spannung zu erzeugen.
             
+            **1. Bildsprache & Metaphern (Der Kern des Prompts):**
+            - **Verankere Emotionen in Konkretem:** Beschreibe Gefühle nicht direkt, sondern durch ihre Auswirkungen auf die physische Welt. Statt 'Ich bin traurig', schreibe 'Ich zertrete ein paar Tulpen im Park, weil ich seit dir schöne Dinge nicht mehr mag'.
+            - **Nutze paradoxe Handlungen:** Verbinde Zärtlichkeit mit Zerstörung. Beispiele zum Orientieren: 'Ich küss' dich zu Trümmern', 'Ich heilte deine Wunden, nur damit ich dich zerstör'n kann', 'Ich wünscht, du wärst schwach, damit ich dich halten kann'.
+            - **Verwende viszerale, körperliche Bilder:** Beschreibe emotionale Zustände durch körperliche Empfindungen. Zum Beispiel: 'Kiefer knackt auf der Fahrbahn', 'Dein Wimpernschlag prügelt mich grün und blau', 'Schmerzen im Bauch', 'Pinkes Slush in den Adern'.
+            - **Schaffe filmreife, hyper-dramatische Szenen:** Male kurze, extreme Bilder, die im Kopf bleiben. Zum Beispiel: 'Steh mit der Schaufel hier im Regen', 'Mische Benzin in meine Coke', 'Niemand sprengt eure Hochzeit'.
+            - **Integriere Alltagsbeobachtungen und urbane Details:** Nutze Elemente wie 'Neonröhren', 'Kopfsteinpflaster', 'Flaschen klirren', 'Ärmel voll Kotze', um eine raue, authentische Atmosphäre zu schaffen.
+
+            **2. Sprache & Haltung:**
+            - **Aktive & Direkte Sprache (Show, Don't Tell):** Zeige Gefühle ausschließlich durch konkrete Handlungen und Beobachtungen.
+            - **Haltung:** Der lyrische Inhalt soll in der Reimstruktur wieder zu erkennen sein. Beispiel: Aggressive Inhalte sind mehr abgehakt, während Liebessongs langsam und weich sind.
+
+            **3. Lyrische Technik & Flow:**
+            - **Anspruchsvolle Reimketten (Verse):** Baue in den Strophen gezielt anspruchsvolle, mehrsilbige Reimketten ein, die sich über mehrere Zeilen erstrecken und ein inhaltliches Gesamtbild erzeugen.
+              - **WICHTIG:** Die Beispiele dienen nur zur Veranschaulichung der Technik, ihr Inhalt darf unter keinen Umständen im generierten Text verwendet werden.
+              - **Anwendung:** Setze diese Technik gezielt ein, um den Flow zu steigern, aber achte darauf, dass der Text flüssig und der Inhalt immer sinnvoll bleibt.
+            - **Eingängiger Hook (Refrain):** Der Refrain muss einfacher und prägnanter sein. Hier sind klare Reime und eine rhythmische Wiederholung von Schlüsselwörtern perfekt.
+
+            **4. Szenario & Wortwahl:**
+            - **Konkretes Szenario:** Verankere den Text in einem klaren, visuellen Szenario.
+            - **Wort-Tabus:** Vermeide klischeehafte Bilder und die Worte: Schatten, Echo, Kälte, Glanz, zerbricht, rast, kalt, Asphalt.
+
             **AUSGABEFORMAT (EXAKT EINZUHALTEN):**
-            Gib deine Antwort in drei klar getrennten Abschnitten zurück: ### Storyline, ### Arrangement, ### Songtext. Der Songtext muss Abschnitte wie [Strophe 1], [Refrain], [Bridge] etc. enthalten.
+            Gib deine Antwort in drei klar getrennten Abschnitten zurück: ### Storyline, ### Arrangement, ### Songtext.
         `;
 
         const response = await callGeminiAPI(prompt);
