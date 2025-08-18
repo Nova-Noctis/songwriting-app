@@ -121,7 +121,6 @@ const Teleprompter = ({ myLyrics }) => {
                         className="w-full p-3 bg-black/30 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-gray-300 transition-all"
                     >
                         <option value="">-- Bitte Text auswählen --</option>
-                        {/* Sicherheitsabfrage hinzugefügt, falls myLyrics nicht geladen ist */}
                         {Array.isArray(myLyrics) && myLyrics.map(lyric => (
                             <option key={lyric.id} value={lyric.id}>{lyric.title}</option>
                         ))}
@@ -129,21 +128,24 @@ const Teleprompter = ({ myLyrics }) => {
                 </div>
 
                 <div className="bg-black/50 rounded-lg h-[60vh] flex">
-                    <div className="w-48 flex-shrink-0 border-r border-white/10 overflow-y-auto p-2">
-                        <h3 className="font-orbitron text-gray-400 text-sm p-2">Abschnitte</h3>
-                        <ul className="space-y-1">
-                            {structuredSong.map((part, index) => (
-                                <li key={index}>
-                                    <button 
-                                        onClick={() => handleNavClick(index)}
-                                        className="w-full text-left text-sm text-gray-300 px-3 py-2 rounded-md hover:bg-white/10 transition-colors"
-                                    >
-                                        {part.header}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
+                    {/* **ÄNDERUNG: Die Navigationsleiste wird nur angezeigt, wenn Abschnitte vorhanden sind.** */}
+                    {structuredSong.length > 0 && (
+                        <div className="w-48 flex-shrink-0 border-r border-white/10 overflow-y-auto p-2">
+                            <h3 className="font-orbitron text-gray-400 text-sm p-2">Abschnitte</h3>
+                            <ul className="space-y-1">
+                                {structuredSong.map((part, index) => (
+                                    <li key={index}>
+                                        <button 
+                                            onClick={() => handleNavClick(index)}
+                                            className="w-full text-left text-sm text-gray-300 px-3 py-2 rounded-md hover:bg-white/10 transition-colors"
+                                        >
+                                            {part.header}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
 
                     <div 
                         ref={textContainerRef}
@@ -151,9 +153,7 @@ const Teleprompter = ({ myLyrics }) => {
                     >
                         {selectedLyricId ? (
                             <div className="py-24 px-8">
-                                {/* **ÄNDERUNG: Logik zur Anzeige des Textes** */}
                                 {structuredSong.length > 0 ? (
-                                    // Fall 1: Text hat [Abschnitte], zeige ihn strukturiert an
                                     structuredSong.map((part, index) => (
                                         <div 
                                             key={index} 
@@ -166,7 +166,6 @@ const Teleprompter = ({ myLyrics }) => {
                                         </div>
                                     ))
                                 ) : (
-                                    // Fall 2: Text hat keine Abschnitte, zeige den gesamten Text an
                                     <p className="whitespace-pre-wrap text-4xl md:text-5xl lg:text-6xl leading-tight font-semibold text-white font-inter">
                                         {selectedLyricContent}
                                     </p>
