@@ -16,7 +16,7 @@ const EditModal = ({ lyric, onSave, onClose }) => {
         onSave(lyric.id, editText);
         onClose();
     };
-// Finale Version des Modal
+
     return (
         // Backdrop / Overlay
         <div 
@@ -61,9 +61,9 @@ const LyricsList = ({ userId }) => {
     const [lyrics, setLyrics] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    // **ÄNDERUNG: State für den Titel hinzugefügt**
     const [newTitle, setNewTitle] = useState('');
     const [newContent, setNewContent] = useState('');
-    // State, um das zu bearbeitende Lied im Modal zu speichern
     const [editingLyric, setEditingLyric] = useState(null);
 
     useEffect(() => {
@@ -85,9 +85,11 @@ const LyricsList = ({ userId }) => {
     }, [userId]);
 
     const addLyric = async () => {
+        // **ÄNDERUNG: Überprüft nun auch, ob ein Titel vorhanden ist**
         if (!newTitle || !newContent || !userId) return;
         try {
             const lyricsCollection = collection(db, 'artifacts', appId, 'users', userId, 'lyrics');
+            // **ÄNDERUNG: Speichert den Titel zusammen mit dem Inhalt**
             await addDoc(lyricsCollection, { title: newTitle, content: newContent, createdAt: new Date() });
             setNewTitle('');
             setNewContent('');
@@ -118,8 +120,21 @@ const LyricsList = ({ userId }) => {
         <div>
              <div className="space-y-4 p-4 bg-black/20 rounded-lg mb-6">
                 <h3 className="text-lg font-semibold text-gray-200">Neuen Text hinzufügen</h3>
-                <input type="text" value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="Titel" className="w-full p-3 bg-black/30 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-gray-300 transition-all font-inter" />
-                <textarea value={newContent} onChange={e => setNewContent(e.target.value)} placeholder="Songtext hier einfügen..." rows="5" className="w-full p-3 bg-black/30 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-gray-300 transition-all font-inter"></textarea>
+                {/* **ÄNDERUNG: Neues Input-Feld für den Titel** */}
+                <input 
+                    type="text" 
+                    value={newTitle} 
+                    onChange={e => setNewTitle(e.target.value)} 
+                    placeholder="Titel" 
+                    className="w-full p-3 bg-black/30 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-gray-300 transition-all font-inter" 
+                />
+                <textarea 
+                    value={newContent} 
+                    onChange={e => setNewContent(e.target.value)} 
+                    placeholder="Songtext hier einfügen..." 
+                    rows="5" 
+                    className="w-full p-3 bg-black/30 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-gray-300 transition-all font-inter"
+                ></textarea>
                 <CustomButton onClick={addLyric} icon={Save}>Speichern</CustomButton>
             </div>
             
@@ -130,6 +145,7 @@ const LyricsList = ({ userId }) => {
                 {lyrics.map(lyric => (
                      <div key={lyric.id} className="glass-panel rounded-xl p-4 flex flex-col justify-between hover:border-white/40 transition-all">
                         <div>
+                            {/* **ÄNDERUNG: Zeigt den gespeicherten Titel an** */}
                             <h4 className="font-bold text-gray-100 truncate">{lyric.title}</h4>
                             <p className="text-gray-400 mt-2 text-sm h-24 overflow-hidden text-ellipsis font-inter">
                                 {lyric.content}
@@ -146,7 +162,6 @@ const LyricsList = ({ userId }) => {
                 <p className="text-gray-500 font-inter">Noch keine Texte gespeichert.</p>
             )}
 
-            {/* Das Bearbeitungs-Modal wird hier gerendert, wenn ein Text ausgewählt wurde */}
             {editingLyric && (
                 <EditModal 
                     lyric={editingLyric}
