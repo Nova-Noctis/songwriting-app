@@ -10,10 +10,13 @@ const appId = 'default-songwriting-app';
 
 // MODAL-KOMPONENTE FÜR DIE BEARBEITUNG
 const EditModal = ({ lyric, onSave, onClose }) => {
+    // **ÄNDERUNG: State für Titel und Inhalt hinzugefügt**
+    const [editTitle, setEditTitle] = useState(lyric.title);
     const [editText, setEditText] = useState(lyric.content);
 
     const handleSave = () => {
-        onSave(lyric.id, editText);
+        // **ÄNDERUNG: Übergibt nun Titel und Inhalt an die Speicherfunktion**
+        onSave(lyric.id, editTitle, editText);
         onClose();
     };
 
@@ -29,11 +32,19 @@ const EditModal = ({ lyric, onSave, onClose }) => {
                 onClick={e => e.stopPropagation()} // Verhindert, dass Klicks im Modal es schließen
             >
                 <div className="flex justify-between items-center">
-                    <h3 className="text-2xl font-bold text-gray-100">Text bearbeiten: <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-400">{lyric.title}</span></h3>
+                    <h3 className="text-2xl font-bold text-gray-100">Text bearbeiten</h3>
                     <button onClick={onClose} className="text-gray-400 hover:text-white">
                         <X size={24} />
                     </button>
                 </div>
+
+                {/* **ÄNDERUNG: Input-Feld für den Titel hinzugefügt** */}
+                <input 
+                    type="text"
+                    value={editTitle}
+                    onChange={e => setEditTitle(e.target.value)}
+                    className="w-full p-3 bg-black/30 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gray-300 focus:border-gray-300 transition-all font-inter font-bold"
+                />
                 
                 {/* Große Textarea für die Bearbeitung */}
                 <textarea 
@@ -61,7 +72,6 @@ const LyricsList = ({ userId }) => {
     const [lyrics, setLyrics] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    // **ÄNDERUNG: State für den Titel hinzugefügt**
     const [newTitle, setNewTitle] = useState('');
     const [newContent, setNewContent] = useState('');
     const [editingLyric, setEditingLyric] = useState(null);
@@ -85,11 +95,9 @@ const LyricsList = ({ userId }) => {
     }, [userId]);
 
     const addLyric = async () => {
-        // **ÄNDERUNG: Überprüft nun auch, ob ein Titel vorhanden ist**
         if (!newTitle || !newContent || !userId) return;
         try {
             const lyricsCollection = collection(db, 'artifacts', appId, 'users', userId, 'lyrics');
-            // **ÄNDERUNG: Speichert den Titel zusammen mit dem Inhalt**
             await addDoc(lyricsCollection, { title: newTitle, content: newContent, createdAt: new Date() });
             setNewTitle('');
             setNewContent('');
@@ -107,10 +115,15 @@ const LyricsList = ({ userId }) => {
         }
     };
     
-    const saveEdit = async (id, newContent) => {
+    // **ÄNDERUNG: Funktion aktualisiert, um Titel und Inhalt zu speichern**
+    const saveEdit = async (id, newTitle, newContent) => {
         if (!userId) return;
         try {
-            await updateDoc(doc(db, 'artifacts', appId, 'users', userId, 'lyrics', id), { content: newContent });
+            const lyricDoc = doc(db, 'artifacts', appId, 'users', userId, 'lyrics', id);
+            await updateDoc(lyricDoc, { 
+                title: newTitle,
+                content: newContent 
+            });
         } catch (err) {
             setError("Fehler beim Speichern der Änderungen.");
         }
@@ -120,7 +133,6 @@ const LyricsList = ({ userId }) => {
         <div>
              <div className="space-y-4 p-4 bg-black/20 rounded-lg mb-6">
                 <h3 className="text-lg font-semibold text-gray-200">Neuen Text hinzufügen</h3>
-                {/* **ÄNDERUNG: Neues Input-Feld für den Titel** */}
                 <input 
                     type="text" 
                     value={newTitle} 
@@ -145,7 +157,6 @@ const LyricsList = ({ userId }) => {
                 {lyrics.map(lyric => (
                      <div key={lyric.id} className="glass-panel rounded-xl p-4 flex flex-col justify-between hover:border-white/40 transition-all">
                         <div>
-                            {/* **ÄNDERUNG: Zeigt den gespeicherten Titel an** */}
                             <h4 className="font-bold text-gray-100 truncate">{lyric.title}</h4>
                             <p className="text-gray-400 mt-2 text-sm h-24 overflow-hidden text-ellipsis font-inter">
                                 {lyric.content}
