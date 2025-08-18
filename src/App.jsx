@@ -7,6 +7,8 @@ import Spinner from '@/components/ui/Spinner.jsx';
 import Generator from '@/components/tabs/Generator.jsx';
 import MyLyrics from '@/components/tabs/MyLyrics.jsx';
 import ExternalLyrics from '@/components/tabs/ExternalLyrics.jsx';
+import Teleprompter from '@/components/tabs/Teleprompter.jsx'; // NEUER IMPORT
+import { MonitorPlay } from 'lucide-react'; // NEUER ICON-IMPORT
 
 const appId = 'default-songwriting-app';
 
@@ -52,9 +54,11 @@ export default function App() {
         };
     }, []);
 
+    // NEUER TAB HINZUGEFÜGT
     const tabs = {
         Generator: <Generator userId={userId} myLyrics={myLyrics} externalLyrics={externalLyrics} setActiveTab={setActiveTab} />,
         'Eigene Texte': <MyLyrics userId={userId} />,
+        'Teleprompter': <Teleprompter myLyrics={myLyrics} />,
         'Externe Texte': <ExternalLyrics />,
     };
 

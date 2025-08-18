@@ -9,16 +9,22 @@ import { BrainCircuit, Sparkles, Save, Wand2, RefreshCw, Lightbulb } from 'lucid
 
 const appId = 'default-songwriting-app';
 
+// Hilfsfunktion: Parst den Songtext in ein Array aus Objekten für die Darstellung
 const parseSongtextForDisplay = (songtext) => {
     if (!songtext) return [];
     const parts = songtext.split(/(\[.*?\])/).filter(Boolean);
     const structuredText = [];
+
     for (let i = 0; i < parts.length; i++) {
         const part = parts[i];
         if (part.startsWith('[') && part.endsWith(']')) {
             const headerContent = part.slice(1, -1);
             const lyricsContent = parts[i + 1] ? parts[i + 1].trim() : '';
-            structuredText.push({ type: 'section', header: headerContent, lyrics: lyricsContent });
+            structuredText.push({
+                type: 'section',
+                header: headerContent,
+                lyrics: lyricsContent,
+            });
             i++;
         } else {
             structuredText.push({ type: 'lyricsOnly', lyrics: part.trim() });
@@ -27,20 +33,24 @@ const parseSongtextForDisplay = (songtext) => {
     return structuredText;
 };
 
+
 const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
+    // State für die Eingabefelder
     const [idea, setIdea] = useState('');
     const [perspective, setPerspective] = useState('Keine');
-    // NEUE STEUERUNGS-OPTIONEN
     const [textType, setTextType] = useState('Uplifting Pop Song');
     const [performanceStyle, setPerformanceStyle] = useState('Gesungen');
     const [negativePrompt, setNegativePrompt] = useState('');
     const [instructions, setInstructions] = useState('');
 
+    // State für den Generierungsprozess
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingIdeas, setIsLoadingIdeas] = useState(false);
     const [isRegenerating, setIsRegenerating] = useState(false);
     const [regeneratingPart, setRegeneratingPart] = useState(null);
     const [isLoadingInspire, setIsLoadingInspire] = useState(false);
+
+    // State für die Ergebnisse
     const [generatedSong, setGeneratedSong] = useState(null);
     const [generatedIdeas, setGeneratedIdeas] = useState([]);
     const [message, setMessage] = useState(null);
@@ -50,7 +60,17 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
     const perspectives = [ 'Keine', 'Ich-Perspektive', 'Du-Perspektive', 'Er/Sie/Es-Perspektive (Dritte-Person-Perspektive)', 'Wir-Perspektive', 'Ihr-Perspektive', 'Auktoriale (allwissende) Perspektive', 'Neutrale (beobachtende) Perspektive', 'Wechselnde Perspektiven' ];
 
     const generateRandomIdeas = useCallback(async () => {
-        // ... Logik bleibt unverändert
+        setIsLoadingIdeas(true);
+        setGeneratedIdeas([]);
+        const prompt = "Erstelle 5 äußerst kreative und thematisch vielfältige Song-Ideen für einen modernen deutschen Pop- oder Rap-Song. Decke eine breite Palette an Themen ab, wie zum Beispiel Natur (ein Sturm zieht auf), Gesellschaftskritik (die Stille in einer lauten Stadt), Science-Fiction (der letzte Mensch auf der Erde findet eine alte Schallplatte) oder historische Ereignisse (ein Brief aus dem Krieg). Vermeide alltägliche, persönliche Beziehungsthemen oder Ideen, die sich nur um Social Media und das digitale Leben drehen. Jede Idee sollte nur ein kurzer, inspirierender Satz sein. Gib nur die 5 Sätze zurück, getrennt durch einen Zeilenumbruch, ohne Nummerierung oder zusätzliche Erklärungen.";
+        const response = await callGeminiAPI(prompt);
+        if (typeof response === 'string' && !response.startsWith('Fehler:')) {
+            const ideas = response.split('\n').filter(line => line.trim() !== '');
+            setGeneratedIdeas(ideas);
+        } else {
+            setMessage({ type: 'error', text: response });
+        }
+        setIsLoadingIdeas(false);
     }, []);
 
     const handleInspireMe = useCallback(async () => {
@@ -112,7 +132,7 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
         const selectedPerformanceStyleInstruction = performanceStyleInstructions[performanceStyle];
 
         const prompt = `
-            Du bist ein erfahrener und vielseitiger Songwriter für deutsche Pop, Urban-Pop und Indie. Deine Stärke ist es, spezifische Stimmungen und klare Geschichten in eine moderne, authentische Sprache zu gießen, die direkt ins Herz trifft.
+            Du bist ein erfahrener und vielseitiger Songwriter für deutschen Pop, Urban-Pop und Indie. Deine Stärke ist es, spezifische Stimmungen und klare Geschichten in eine moderne, authentische Sprache zu gießen, die direkt ins Herz trifft.
 
             **ÜBERGEORDNETE ANWEISUNG:**
             - **Art des Textes:** ${selectedTextTypeInstruction}
@@ -125,7 +145,30 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
             - **Inhalte, die vermieden werden sollen:** ${negativePrompt || "Keine besonderen."}
 
             **DEIN KREATIVES REGELWERK (DIESE REGELN GELTEN IMMER):**
-            // ... (Hier bleibt das detaillierte Regelwerk aus der vorherigen Version)
+            **1. Thematische Umschreibung (Wichtigste Regel):**
+            - Das Kernthema der Song-Idee darf im Text **niemals direkt genannt** werden. Es muss ausschließlich durch Bilder, Handlungen und Gefühle umschrieben werden.
+
+            **2. Tonalität & Vibe (Der Sound):**
+            - **Grundstimmung:** Erzeuge eine cineastische Atmosphäre. Denk an einen Film: die Spannung zwischen dem Gesagten und Ungesagten. Die Stimmung ist entscheidend.
+            - **Sprache:** Schreibe in einer klaren, direkten und modernen Umgangssprache. Der Text muss sich anfühlen wie ein echter Gedanke oder ein belauschtes Gespräch.
+
+            **3. Storytelling & Emotion (Das Herz):**
+            - **Geschichte > Poesie:** Eine klare, nachvollziehbare Geschichte oder Situation steht im Mittelpunkt.
+            - **Dynamische Szenen & Entwicklung:** Die Geschichte darf nicht statisch sein. Sie muss sich durch verschiedene Momente oder emotionale Zustände bewegen.
+            - **Der Twist:** Baue ein überraschendes Element oder einen unerwarteten Perspektivwechsel ein, idealerweise in der Bridge.
+            - **Konkretes "Show, Don't Tell":** Zeige Emotionen durch präzise, alltägliche Beobachtungen und Handlungen.
+
+            **4. Lyrische Technik & Originalität:**
+            - **Intelligente & Effiziente Bildsprache:** Nutze eine anspruchsvolle, intelligente Wortwahl. Male detailreiche Bilder durch den gezielten Einsatz von starken Verben und prägnanten Adjektiven, ohne die Zeilen unnötig lang werden zu lassen.
+            - **Kraftvolle Umschreibungen statt Klischees:** Vermeide abgedroschene Darstellungen wie "Die Luft ist schwer". Formuliere stattdessen ungewöhnliche, kraftvolle Umschreibungen.
+            - **Wort-Tabus:** Vermeide klischeehafte Bilder und die Worte: Schatten, Echo, Kälte, Glanz, zerbricht, rast, kalt, Asphalt.
+            - **Dynamische Wortwahl:** Achte aktiv auf Wortwiederholungen. Ersetze generische Wörter durch stärkere Synonyme.
+            - **Achte auf korrekte deutsche Grammatik und Satzbau.
+
+            **5. Flow & Musikalität (Struktur von Strophe und Refrain):**
+            - **Verse (Strophen) - Anspruchsvolle Reimketten:** Baue in den Strophen gezielt anspruchsvolle, mehrsilbige Reimketten ein, die sich über mehrere Zeilen erstrecken.
+            - **Hook (Refrain) - Eingängige Melodik:** Der Refrain muss im starken Kontrast zur Strophe stehen: extrem eingängig (catchy), melodisch und sofort singbar.
+            - **Rhythmusgefühl:** Variiere die Satzlänge stark, um Dynamik und Spannung zu erzeugen.
             
             **AUSGABEFORMAT (EXAKT EINZUHALTEN):**
             Gib deine Antwort in drei klar getrennten Abschnitten zurück: ### Storyline, ### Arrangement, ### Songtext. Der Songtext muss Abschnitte wie [Strophe 1], [Refrain], [Bridge] etc. enthalten.
@@ -145,11 +188,36 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
     }, [idea, perspective, textType, performanceStyle, negativePrompt, instructions, myLyrics, externalLyrics]);
 
     const handleRegeneratePart = useCallback(async (partToRegen) => {
-        // ... Logik bleibt unverändert
+        setIsRegenerating(true);
+        setRegeneratingPart(partToRegen);
+        const prompt = `Aufgabe: Überarbeite einen bestimmten Teil eines vorhandenen Songtextes.\n\n**Vorhandener Songtext als Kontext:**\n${generatedSong.songtext}\n\n**Anweisung:**\nSchreibe NUR den Abschnitt "${partToRegen}" neu. Der neue Text für "${partToRegen}" muss stilistisch, thematisch und inhaltlich perfekt zum Rest des Songs passen. Behalte die ursprüngliche Stimmung bei, aber versuche, die Wortwahl und die Bilder zu variieren und zu verbessern. Gib NUR den neu geschriebenen, vollständigen Abschnitt inklusive der Kennzeichnung (z.B. "[Refrain]") zurück, sonst nichts.`;
+        const newPartText = await callGeminiAPI(prompt);
+        const regex = new RegExp(`(\\[${partToRegen.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\][\\s\\S]*?)(?=\\[|$)`, 'i');
+        const updatedSongtext = generatedSong.songtext.replace(regex, newPartText.trim() + '\n\n');
+        setGeneratedSong(prev => ({ ...prev, songtext: updatedSongtext.trim() }));
+        setIsRegenerating(false);
+        setRegeneratingPart(null);
     }, [generatedSong]);
     
     const saveSong = useCallback(async () => {
-        // ... Logik bleibt unverändert
+        if (!generatedSong || !userId) return;
+        try {
+            const lyricsCollection = collection(db, 'artifacts', appId, 'users', userId, 'lyrics');
+            await addDoc(lyricsCollection, { title: idea, content: generatedSong.songtext, createdAt: new Date() });
+            setMessage({ type: 'success', text: 'Song erfolgreich gespeichert! Du wirst weitergeleitet...' });
+            setTimeout(() => {
+                setIdea('');
+                setPerspective('Keine');
+                setInstructions('');
+                setGeneratedSong(null);
+                setMessage(null);
+                setGeneratedIdeas([]);
+                setActiveTab('Eigene Texte');
+            }, 1500);
+        } catch (error) {
+            console.error("Fehler beim Speichern des Songs:", error);
+            setMessage({ type: 'error', text: 'Fehler beim Speichern des Songs.' });
+        }
     }, [generatedSong, userId, idea, setActiveTab]);
 
     return (
