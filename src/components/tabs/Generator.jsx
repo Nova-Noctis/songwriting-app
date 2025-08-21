@@ -132,36 +132,33 @@ const Generator = ({ userId, myLyrics, externalLyrics, setActiveTab }) => {
             - **Zusätzliche Anweisungen:** ${instructions || "Keine besonderen."}
             - **Inhalte, die vermieden werden sollen:** ${negativePrompt || "Keine besonderen."}
 
-            **DEIN KREATIVES REGELWERK (DIESE REGELN GELTEN IMMER):**
+                **DEIN KREATIVES REGELWERK (DIESE REGELN GELTEN IMMER):**
 
-            **1. Bildsprache & Metaphern (Der Kern des Prompts):**
-            - **Verankere Emotionen in Konkretem:** Beschreibe Gefühle nicht direkt, sondern durch ihre Auswirkungen auf die physische Welt. Statt 'Ich bin traurig', schreibe 'Ich zertrete ein paar Tulpen im Park, weil ich seit dir schöne Dinge nicht mehr mag'.
-            - **Nutze paradoxe Handlungen:** Verbinde Zärtlichkeit mit Zerstörung. Die folgenden Beispiele dienen nur als stilistische Inspiration, vermeide es, sie wörtlich zu übernehmen: 'Ich küss' dich zu Trümmern', 'Ich heilte deine Wunden, nur damit ich dich zerstör'n kann'.
-            - **Verwende viszerale, körperliche Bilder:** Beschreibe emotionale Zustände durch körperliche Empfindungen. Zum Beispiel: 'Kiefer knackt auf der Fahrbahn', 'Dein Wimpernschlag prügelt mich grün und blau'.
-            - **Schaffe filmreife, hyper-dramatische Szenen:** Male kurze, extreme Bilder, die im Kopf bleiben. Zum Beispiel: 'Steh mit der Schaufel hier im Regen', 'Mische Benzin in meine Coke'.
+            **1. Der kreative Anker (Wichtigste Regel zur Vermeidung von Generik):**
+            - Wähle zu Beginn ein einziges, spezifisches und ungewöhnliches Sinnesdetail als zentralen Anker für den gesamten Song (z.B. der Geruch von Ozon nach einem Sommerregen, das Geräusch einer flackernden Leuchtstoffröhre, das Gefühl von Samt auf der Haut).
+            - Jede Metapher, jedes Bild und jede Beschreibung im Text muss sich auf diesen einen, spezifischen Anker beziehen oder durch ihn gefiltert werden. Dies verhindert generische Bilder.
+
+            **2. Bildsprache & Metaphern:**
+            - **Verankere Emotionen in Konkretem:** Beschreibe Gefühle nicht direkt, sondern durch ihre Auswirkungen auf die physische Welt.
+            - **Nutze paradoxe Handlungen:** Verbinde Zärtlichkeit mit Zerstörung.
+            - **Verwende viszerale, körperliche Bilder:** Beschreibe emotionale Zustände durch körperliche Empfindungen.
+            - **Schaffe filmreife, hyper-dramatische Szenen:** Male kurze, extreme Bilder, die im Kopf bleiben.
             - **Integriere Alltagsbeobachtungen und urbane Details:** Nutze Elemente wie 'Neonröhren', 'Kopfsteinpflaster', 'Flaschen klirren', 'Bierdunst', um eine raue, authentische Atmosphäre zu schaffen.
-            - **Dynamische Sinneseindrücke:** Beschreibe nicht nur, was die Figur sieht, sondern wie sich die Wahrnehmung verändert. Geräusche werden lauter, Lichter verschwimmen, Gerüche werden intensiver.
-            - **Vermeide generische Bilder:** STRIKT VERMEIDEN: "Der Wind flüstert", "Der Regen trommelt", "Die Sonne lacht". ERSETZE DURCH: "Der Wind heult durch die Gassen", "Der Regen peitscht gegen die Scheiben", "Die Sonne brennt auf dem Asphalt". Suche immer nach dem spezifischeren, stärkeren Verb.
-
-            **2. Sprache & Haltung:**
-            - **Aktive & Direkte Sprache (Show, Don't Tell):** Zeige Gefühle ausschließlich durch konkrete Handlungen und Beobachtungen.
-            - **Haltung im Flow abbilden:** Die Sprache und der Satzbau spiegeln die Entwicklung wider. Beginne mit klaren, abgeschlossenen Sätzen (Symbol für Kontrolle). Nutze im Verlauf des Songs zunehmend Enjambements (Zeilensprünge) und einen atemloseren Rhythmus, um Kontrollverlust darzustellen.
+            - **Aktive Vermeidung von Klischees:** Erkenne und ersetze aktiv generische Bilder. STRIKT VERMEIDEN: "Der Wind flüstert", "leere Straßen", "kalter Beton", "Herz aus Eis". ERSETZE DURCH: "Der Wind zerrt an den Jalousien", "Straßen, auf denen nur noch die Ampeln wach sind", "Beton, der die Kälte des Winters gespeichert hat".
+            - **Achte auf Musikalische und einfache Klangstruktur:** Der Text muss sich gut singen oder Rappen lassen. Achte auf den Rhytmus und die Silbenstruktur.
+            - **Achte auf korrekte deutschte Grammatik und Rechtschreibung:** Der Text muss grammatikalisch korrekt sein, umd eine klare Verständlichkeit der Zeilen zu gewährleisten.
 
             **3. Lyrische Technik & Flow (Fortgeschritten):**
-            - **WICHTIG: Die Story führt den Reim, nicht umgekehrt.** Der erzählerische Fluss und die emotionale Glaubwürdigkeit haben immer Vorrang vor einer technisch perfekten Reimkette.
-            - **Schwerpunkt Reimketten & Assonante Reime:** Konstruiere lange Reimketten (4-8 Zeilen), die auf assonanten Reimen (gleiche Vokalabfolge) basieren. Die folgenden Beispiele illustrieren die Reimtechnik, nicht den Inhalt. Vermeide es, die Wörter aus den Beispielen zu kopieren, es sei denn, sie passen thematisch perfekt und unaufdringlich in den neuen Kontext. Deine eigenen, originellen Wortketten werden stark bevorzugt.
-            - **Schwerpunkt Silbenteilung & Satzbildung (Mehrsilbigkeit):** Verwende gezielt lange, mehrsilbige und zusammengesetzte Substantive als Reimwörter. Baue den Satz natürlich um diese Reimwörter herum.
-            - **Schwerpunkt Wortspiele & Doppeldeutigkeiten:** Integriere gezielt Wortspiele und Homophone.
-            - **Zusatz-Schwerpunkt Binnenreime (Interne Reime):** Platziere Reime auch innerhalb der Zeilen.
+            - **WICHTIG: Die Story führt den Reim, nicht umgekehrt.** Der erzählerische Fluss hat immer Vorrang.
+            - **Anspruchsvolle Reimketten (Verse):** Baue gezielt mehrsilbige, assonante Reimketten ein, die sich über mehrere Zeilen erstrecken.
+            - **Eingängiger Hook (Refrain):** Der Refrain muss einfacher, prägnanter und melodischer sein.
 
-            **4. Szenario & Wortwahl:**
-            - **Konkretes Szenario:** Verankere den Text in einem klaren, visuellen Szenario.
-            - **Wort-Tabus:** Vermeide klischeehafte Bilder und die Worte: Schatten, Echo, Kälte, Glanz, zerbricht, rast, kalt, Asphalt.
+            **4. Narrative Struktur & Dramaturgie (Der rote Faden):**
+            - **Definiere einen klaren Handlungsbogen:** Jeder Songtext muss einer nachvollziehbaren emotionalen oder physischen Reise folgen (Exposition -> Eskalation -> Wendepunkt -> Auflösung).
+            - **Entwickle die zentrale Metapher:** Die Hauptmetapher darf nicht statisch sein. Zeige ihre Entwicklung über den Song hinweg.
 
-            **5. Narrative Struktur & Dramaturgie (Der rote Faden):**
-            - **Definiere einen klaren Handlungsbogen:** Jeder Songtext muss einer nachvollziehbaren emotionalen oder physischen Reise folgen. Strukturiere den Text entlang einer Entwicklung (Exposition -> Eskalation -> Wendepunkt -> Auflösung).
-            - **Verbinde Szenen durch Kausalität (Grund -> Folge):** Die Szene in Verse 2 muss eine logische Konsequenz aus dem Gefühl oder der Handlung in Verse 1 sein.
-            - **Entwickle die zentrale Metapher:** Die Hauptmetapher darf nicht statisch sein. Zeige ihre Entwicklung über den Song hinweg (z.B. von einem leichten Schaden zu einem kompletten Untergang).
+            **5. Selbstkorrektur:**
+            - Überprüfe deinen fertigen Text. Wenn du feststellst, dass du generische Bilder wie 'Neonlichter' oder 'Staub' verwendet hast, überarbeite diese Zeilen, um sie spezifischer und einzigartiger zu machen.
 
             **AUSGABEFORMAT (EXAKT EINZUHALTEN):**
             Gib deine Antwort in drei klar getrennten Abschnitten zurück: ### Storyline, ### Arrangement, ### Songtext.
