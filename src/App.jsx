@@ -7,8 +7,7 @@ import Spinner from '@/components/ui/Spinner.jsx';
 import Generator from '@/components/tabs/Generator.jsx';
 import MyLyrics from '@/components/tabs/MyLyrics.jsx';
 import ExternalLyrics from '@/components/tabs/ExternalLyrics.jsx';
-import Teleprompter from '@/components/tabs/Teleprompter.jsx'; // NEUER IMPORT
-import { MonitorPlay } from 'lucide-react'; // NEUER ICON-IMPORT
+import Teleprompter from '@/components/tabs/Teleprompter.jsx';
 
 const appId = 'default-songwriting-app';
 
@@ -54,7 +53,6 @@ export default function App() {
         };
     }, []);
 
-    // NEUER TAB HINZUGEFÜGT
     const tabs = {
         Generator: <Generator userId={userId} myLyrics={myLyrics} externalLyrics={externalLyrics} setActiveTab={setActiveTab} />,
         'Eigene Texte': <MyLyrics userId={userId} />,
@@ -65,7 +63,7 @@ export default function App() {
     const TabButton = ({ name }) => (
         <button
             onClick={() => setActiveTab(name)}
-            className={`font-orbitron px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-300 ${
+            className={`flex-shrink-0 font-orbitron px-4 py-2 text-sm whitespace-nowrap font-medium rounded-lg transition-colors duration-300 ${
                 activeTab === name
                     ? 'bg-white/90 text-black shadow-lg'
                     : 'text-gray-300 hover:bg-white/20'
@@ -95,8 +93,11 @@ export default function App() {
                     </h1>
                     <p className="text-gray-400 text-lg tracking-wider font-orbitron">Dein kreativer Partner für den nächsten Hit</p>
                 </header>
-                <nav className="flex justify-center space-x-2 md:space-x-4 mb-8 p-2 glass-panel rounded-xl">
-                    {Object.keys(tabs).map(tabName => <TabButton key={tabName} name={tabName} />)}
+                <nav className="glass-panel rounded-xl p-2 mb-8">
+                    {/* **ÄNDERUNG: `flex-nowrap` verhindert das Umbrechen der Buttons** */}
+                    <div className="flex items-center space-x-2 overflow-x-auto horizontal-scrollbar flex-nowrap">
+                        {Object.keys(tabs).map(tabName => <TabButton key={tabName} name={tabName} />)}
+                    </div>
                 </nav>
                 <main>
                     {tabs[activeTab]}
